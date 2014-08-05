@@ -62,7 +62,16 @@ echonest.song = function(uri, completed_callback) {
 }
 
 echonest.init = function () {
+	// initial loading of echonest data.
 	spotify.track(function(arg) {
+		var uri = arg.track.uri;
+		echonest.current_song = new echonest.song(uri, function() {
+			console.log("echonest ready with " + uri);
+		});
+	});
+
+	// load of echonest data when song changes.
+	spotify.track_change(function (arg) {
 		var uri = arg.track.uri;
 		echonest.current_song = new echonest.song(uri, function() {
 			console.log("echonest ready with " + uri);
