@@ -19,15 +19,10 @@ spotify.position = function() {
 	return spotify._position + (now - spotify._fetch_time);
 }
 
-
 require(['$api/models'], function(models) {
 	spotify.models = models;
 
-	var test = function () {
-		console.log("position: " + spotify.position());
-		setTimeout(test, 1000);
-	};
-	test();
+	spotify.position()
 
 	main.init();
 });
