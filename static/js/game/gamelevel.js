@@ -55,14 +55,14 @@ Gamelevel = function( uri ) {
 	var last_key = 0;
 	for (var i in sections) {
 		var section = sections[i];
-		var start = section.start * 100;
-		var end = start + section.duration * 100;
+		var start = section.start * 500;
+		var end = start + section.duration * 500;
 
 		var loudness = Math.abs(section.loudness);
 
 		for (var cur_start = start; cur_start < end; ) {
 			// start, end
-			var length = 30 * loudness;
+			var length = 60 * loudness;
 			var s = cur_start;
 			var e = s + length;
 

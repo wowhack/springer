@@ -4,6 +4,6 @@ Player.proto.init = function( x,y, gravity ) {
 };
 
 Player.proto.update = function ( track_pos ) {
-	this.x = track_pos / 10.0;
+	this.x = track_pos / 2;
 	// console.log(this.x);
 }
