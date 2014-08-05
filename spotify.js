@@ -15,6 +15,10 @@ update_track = function() {
 }
 
 spotify.position = function() {
+	if (!spotify._playing) {
+		return spotify._position;
+	}
+
 	var now = curTime();
 	if (now - spotify._fetch_time > 5000)
 		update_track();
@@ -33,7 +37,7 @@ spotify.track_change = function(callback) {
 
 spotify.playing = function(callback) {
 	spotify.models.player.load("playing").done(function(d) {
-		callback(d.playing);
+		callback(d);
 	});
 }
 
@@ -41,6 +45,14 @@ spotify.playing_change = function(callback) {
 	spotify.models.player.addEventListener("change:playing", function() {
 		spotify.playing(callback);
 	});
+}
+
+spotify.pause = function() {
+	spotify.models.player.pause();
+}
+
+spotify.play = function() {
+	spotify.models.player.play();
 }
 
 require(['$api/models'], function(models) {
@@ -54,6 +66,13 @@ require(['$api/models'], function(models) {
 	//spotify.playing_change(function(b) {console.log("playing: ", b)});
 	spotify.track_change(function() {
 		// update the position now that we've changed track.
+		spotify._fetch_time = 0;
 		spotify.position();
+	});
+
+	spotify.playing_change(function (arg) {
+		spotify._position = arg.position;
+		spotify._playing = arg.playing;
+		spotify._fetch_time = curTime();
 	});
 });

@@ -64,19 +64,23 @@ echonest.song = function(uri, completed_callback) {
 }
 
 echonest.init = function () {
+	var handle_load_echonest = function(uri) {
+		spotify.pause();
+		echonest.current_song = new echonest.song(uri, function() {
+			console.log("echonest ready with " + uri);
+			spotify.play();
+		});
+	};
+
 	// initial loading of echonest data.
 	spotify.track(function(arg) {
 		var uri = arg.track.uri;
-		echonest.current_song = new echonest.song(uri, function() {
-			console.log("echonest ready with " + uri);
-		});
+		handle_load_echonest(uri);
 	});
 
 	// load of echonest data when song changes.
 	spotify.track_change(function (arg) {
 		var uri = arg.track.uri;
-		echonest.current_song = new echonest.song(uri, function() {
-			console.log("echonest ready with " + uri);
-		});
+		handle_load_echonest(uri);
 	});
 }
