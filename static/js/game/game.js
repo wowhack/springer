@@ -6,7 +6,7 @@ Springer = function( config )
 	screen.init = function( instance )
 	{
 		this.camera = Camera.new( [0, pp.settings.width, 0, pp.settings.height] );
-		this.player = Player.new( 0,0,100 ); // start x,y,gravity
+		this.player = Player.new( 0,200,100 ); // start x,y,gravity
 
 		this.camera.set_look_at( this.player );
 
@@ -17,7 +17,7 @@ Springer = function( config )
 
 	screen.update = function( instance, dt, vis )
 	{
-		this.player.update( spotify.position() );
+		this.player.update( this.gamelevel, spotify.position(), dt );
 		
 	};
 
@@ -33,6 +33,7 @@ Springer = function( config )
 	    gl.clear( gl.COLOR_BUFFER_BIT );
 
 	    this.gamelevel.draw( this.camera );
+	    this.player.draw( this.camera );
 
 	};
 

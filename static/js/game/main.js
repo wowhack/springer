@@ -38,11 +38,6 @@ main.init = function () {
 
 				game   = Springer({}); 
 
-			camera = Camera.new( [0, pp.settings.width, 0, pp.settings.height] );
-			player = Player.new( 0,0,100 ); // start x,y,gravity
-
-			camera.set_look_at( player );
-
 			//spotify.models.player.load("track", "position").done(function(p) {
 			//	game.start_new( p.track.uri );
 			//});
