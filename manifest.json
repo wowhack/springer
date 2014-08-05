@@ -36,6 +36,9 @@
     "api": "1.38.0",
     "views": "1.18.1"
   },
+  "RequiredPermissions": [
+      "http://localhost:8090"
+  ],
   "SupportedLanguages": [
     "en"
   ],
