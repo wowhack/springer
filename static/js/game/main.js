@@ -9,10 +9,24 @@ pp.log("Porcupine viewer template example");
 porcupine.templates.get( [ 
 	"static/js/game/factory.js",
 	"static/js/game/gamefactories.js",
-	"static/js/game/player.js" ], 
+	"static/js/game/player.js",
+	"static/js/game/game.js",
+	"static/js/game/camera.js"
+	], 
 function()
 { 
 	// här kan man ha kod
+
+	// todo: preloadscreen..
+
+	game   = Springer({}); 
+
+	camera = Camera.new( [0, pp.settings.width, 0, pp.settings.height] );
+	player = Player.new( 0,0,100 ); // start x,y,gravity
+
+	camera.set_look_at( player );
+
+	pp.push_screen(game);
 });
 
 // pp.push_screen( pp.preloadscreen( {
@@ -20,9 +34,6 @@ function()
 // 	}, function(progress) {
 // 			if (progress < 1.0)
 // 				return;
-		
-
-
 // 		}) // pp.preloadscreen()
 // 	);
 

@@ -6,39 +6,41 @@ Entity  = {
 }
 
 Transform    = {
-	// x = 0,
-	// y = 0,
-	// r = 0,
-	// s = {1, 1},
-	// set_position  = function(self,x,y) self.x=x;self.y=y; end,
-	// get_position  = function(self) return {self.x,self.y} end,
-	// set_scale     = function(self,s) self.s = s end,
-	// get_scale     = function(self) return self.s end,
-	// set_rotation  = function(self,r) self.r = r end,
-	// get_rotation  = function(self) return self.r end,
-	// get_transform = function(self)
-	
-	// 	local mtx = mat4.identity()
-	// 	mat4.translate( mtx, {self.x,self.y,0} )
-	// 	mat4.rotate( mtx, self.r, {0,0,1} )
-	// 	mat4.scale( mtx, { self.s[1], self.s[2], 1 } )
+	x : 0,
+	y : 0,
+	r : 0,
+	s : [1, 1],
 
-	// 	return mtx
-	// end,
-	// translate  = function(self,dx,dy) 
-	// 	self.x = self.x + dx
-	// 	self.y = self.y + dy
-	// end
+	set_position  : function(x,y) { this.x=x;this.y=y; },
+	get_position  : function()    { return [this.x,this.y] },
+	set_scale     : function(s)   { this.s = s },
+	get_scale     : function()    { return this.s },
+	set_rotation  : function(r)   { this.r = r },
+	get_rotation  : function()    { return this.r },
+	get_transform : function()    { 
+	
+		var mtx = mat4.identity();
+		mat4.translate( mtx, [ this.x,this.y,0] );
+		mat4.rotate( mtx, this.r, [0,0,1] );
+		mat4.scale( mtx, [ this.s[0], this.s[1], 1 ] );
+
+		return mtx
+	},
+
+	translate  : function( dx,dy ) {
+		this.x = this.x + dx
+		this.y = this.y + dy
+	}
 };
 
-// 
+// intersection between box1 and box2
 Intersection   = {
-	// intersect_box = function(self,box1,box2)
-	// 	if ( box1[3] < box2[1] or box1[1] > box2[3] or
-	// 	     box1[4] < box2[2] or box1[2] > box2[4] ) then
-	// 		return false
-	// 	end
+	intersect_box : function(box1,box2)
+	{
+		if ( box1[2] < box2[0] || box1[0] > box2[2] ||
+		     box1[3] < box2[1] || box1[1] > box2[3] )
+			return false;
 
-	// 	return true
-	// end
+		return true;
+	}
 }
