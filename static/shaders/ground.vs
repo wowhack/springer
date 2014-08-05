@@ -15,11 +15,12 @@ varying vec3 v_color;
 
 void main()
 {
-	v_uv0   = vec2(uv0.s, uv0.t);
+	v_uv0   = vec2(uv0.s, 1.0 - uv0.t);
 	//v_color = normal;
 	block_width = normal.x;
 	block_height = normal.y;
 
+	// gl_Position = vec4(position.xyz, 1.0);
 	gl_Position = pmtx * vmtx * mmtx * vec4(position.xyz, 1.0);
 	
 }

@@ -13,43 +13,52 @@ main.init = function () {
 	//	// console.warn("player changed");
 	//});
 
-	porcupine.templates.get( [ 
-		"static/js/game/factory.js",
-		"static/js/game/gamefactories.js" ], function() {
+		porcupine.templates.get( [ 
+			"static/js/game/factory.js",
+			"static/js/game/gamefactories.js" ], function() {
 
-			porcupine.templates.get( [ 
-				"static/js/game/player.js",
-				"static/js/game/game.js",
-				"static/js/game/camera.js",
-				"static/js/game/gamelevel.js",
-				"static/js/game/debugquad.js"
-				], 
-			function()
-			{ 
-				// här kan man ha kod
+				porcupine.templates.get( [ 
+					"static/js/game/player.js",
+					"static/js/game/game.js",
+					"static/js/game/camera.js",
+					"static/js/game/gamelevel.js",
+					"static/js/game/debugquad.js"
+					], 
+				function()
+				{ 
 
-				// realtime analysis setup
-				require(["static/js/game/realtime"],
-					function(realtime) {
-						realtime.init(spotify.models.player);
-					});
 
-				// todo: preloadscreen..
+					pp.push_screen( pp.preloadscreen( {
+						// "box_scene" : { loader: PXF.Scene, args : ["boxtest/scene.js"] }
+						"ground_0" : { loader: PXF.Texture, args : ["texture/ground_0.png"] }
+					}, function(progress) {
+							if (progress < 1.0)
+								return;
+							// här kan man ha kod
 
-				game   = Springer({}); 
+							// realtime analysis setup
+							require(["static/js/game/realtime"],
+								function(realtime) {
+									realtime.init(spotify.models.player);
+								});
 
-			camera = Camera.new( [0, pp.settings.width, 0, pp.settings.height] );
-			player = Player.new( 0,0,100 ); // start x,y,gravity
+							// todo: preloadscreen..
 
-			camera.set_look_at( player );
+							game   = Springer({}); 
 
-			//spotify.models.player.load("track", "position").done(function(p) {
-			//	game.start_new( p.track.uri );
-			//});
+							camera = Camera.new( [0, pp.settings.width, 0, pp.settings.height] );
+							player = Player.new( 0, 0, 100 ); // start x,y,gravity
 
-			pp.push_screen(game);
+							camera.set_look_at( player );
+
+							//spotify.models.player.load("track", "position").done(function(p) {
+							//	game.start_new( p.track.uri );
+							//});
+
+							pp.push_screen(game);
+						}));
+				});
 			});
-		});
 
 	pp.run();
 
@@ -62,13 +71,13 @@ main.init = function () {
 function show_modal () {
 
 	var elem = document.getElementById("stopped_modal");
-	elem.style.display = "none";
+	elem.style.display = "block";
 
 }
 
 function hide_modal () {
 
 	var elem = document.getElementById("stopped_modal");
-	elem.style.display = "block";
+	elem.style.display = "none";
 
 }

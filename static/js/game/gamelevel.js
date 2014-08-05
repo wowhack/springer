@@ -49,7 +49,10 @@ Gamelevel = function( uri ) {
 
 	this.segment_qbs = [];
 	for (var i = 0; i < 4; i += 1) {
-		this.segment_qbs.push(new PXF.QuadBatch( pp.ctx ));
+		var qb = new PXF.QuadBatch( pp.ctx );
+		qb.depth = 0;
+		this.segment_qbs.push( qb );
+
 	}
 
 	// tmp
@@ -76,7 +79,7 @@ Gamelevel.prototype.draw = function( camera ) {
 
 	var visible_segments = this.track_segments; //self:query_segments( camera_view )
 
-	var shader = pp.ctx.Shaderlib.forward;
+	/*var shader = pp.ctx.Shaderlib.forward;
 	shader.Bind();
 
 	shader.SetUniform( "uPMatrix", camera_pmtx );
@@ -98,8 +101,8 @@ Gamelevel.prototype.draw = function( camera ) {
 		this.tempquad.UnbindBuffers( shader, {position : true, uv0 : true});
 	};
 
-	shader.Unbind();
-/*
+	shader.Unbind();*/
+
 	for (var i in this.segment_qbs) {
 		var v = this.segment_qbs[i];
 		v.Reset();
@@ -109,6 +112,8 @@ Gamelevel.prototype.draw = function( camera ) {
 		var v = visible_segments[i];
 		this.segment_qbs[v.t].SetNormal( v.e-v.s, v.h, 0 );
 		this.segment_qbs[v.t].AddTopLeft( v.s, v.h, v.e-v.s, -v.h );
+		// this.segment_qbs[v.t].depth = 0;
+		// this.segment_qbs[v.t].AddTopLeft( 0, 0, 1000, 1000 );
 	}
  	
  	//segments_qb.AddTopLeft(camera_view.s, 40, camera_view.e-camera_view.s, 10)
@@ -122,16 +127,18 @@ Gamelevel.prototype.draw = function( camera ) {
 	var shader = this.shader;
 
  	shader.Bind();
+	// shader.SetUniform("pmtx", mat4.identity() );
 	shader.SetUniform("pmtx", camera_pmtx );
+	// shader.SetUniform("vmtx", mat4.identity() );
 	shader.SetUniform("vmtx", camera_vmtx );
 	shader.SetUniform("mmtx", mat4.identity() );
 
 	shader.SetUniform("cap_width",  25.0 );
 	shader.SetUniform("cap_height",  40.0 );
 
-	shader.SetUniform("tex_left",  0 );
-	shader.SetUniform("tex_mid",   1 );
-	shader.SetUniform("tex_right", 2 );
+	shader.SetUniform("tex0",  0 );
+	// shader.SetUniform("tex_mid",   1 );
+	// shader.SetUniform("tex_right", 2 );
 
     shader.SetUniform("pixels_to_coords", 1.0 );
 
@@ -144,11 +151,15 @@ Gamelevel.prototype.draw = function( camera ) {
 		// 	-- shader:SetUniform("f", "block_width", visible_segments[i][2] - visible_segments[i][1] )
 		// -- end
 
-		// segment_textures[i].left:Bind( 0 )
+		//segment_textures[i].left:Bind( 0 )
 		// segment_textures[i].mid:Bind( 1 )
 		// segment_textures[i].right:Bind( 2 )
+		pp.get_resource( "ground_0" ).Bind( 0 );
 
-		v.Draw( shader )
+		//v.Draw( shader );
+		v.BindBuffers( shader, { position : true, uv0 : true});
+		v.DrawBuffers( shader );
+		v.UnbindBuffers( shader, {position : true, uv0 : true});
 
 		// segment_textures[i].right:Unbind( )
 		// segment_textures[i].mid:Unbind( )
@@ -156,7 +167,7 @@ Gamelevel.prototype.draw = function( camera ) {
 	}
 
     shader.Unbind()
-    */
+    
 };
 
 Gamelevel.prototype.query_segments = function ( self, view ) {
