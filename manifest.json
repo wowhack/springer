@@ -26,7 +26,7 @@
       }
     },
     {
-      "arguments": "tabs",
+      "arguments": "highscore",
       "title": {
         "en": "Highscore"
       }

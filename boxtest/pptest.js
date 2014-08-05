@@ -14,9 +14,9 @@
 			 * Load templates and create screens
 			 */
 			porcupine.templates.get( [ 
-				"/boxtest/templates/viewer/viewer.js",  
-				"/boxtest/templates/camera/roam.js",
-				"/boxtest/templates/camera/trackball.js" ], 
+				"boxtest/templates/viewer/viewer.js",  
+				"boxtest/templates/camera/roam.js",
+				"boxtest/templates/camera/trackball.js" ], 
 			function()
 			{
 				pp.log("Finished loading screen templates");
