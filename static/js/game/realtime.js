@@ -19,7 +19,7 @@ There are three events:
 */
   var audio_event_handlers = {
     audio: function (event) {
-      console.log(event)
+      //console.log(event)
       return true;
     },
     pause: function (event) {
