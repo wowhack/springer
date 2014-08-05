@@ -58,6 +58,6 @@ echonest.song = function(uri, completed_callback) {
 }
 
 
-var song = new echonest.song("7sLaTUdRIh4e1HUSsHDTJX", function(song) {
-		console.log("completed " + song);
-	});
+//var song = new echonest.song("7sLaTUdRIh4e1HUSsHDTJX", function(song) {
+//		console.log("completed " + song);
+//	});
