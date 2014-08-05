@@ -8,7 +8,9 @@ main.init = function () {
 
 	spotify.models.player.addEventListener('change', function( arg ) {
 		// did we change track? if so, create new room!
-		tmp_change_room( arg.data.track.uri );
+		// tmp_change_room( arg.data.track.uri );
+		game.start_new( arg.data.track.uri );
+		// console.warn("player changed");
 	});
 
 	porcupine.templates.get( [ 
@@ -36,9 +38,21 @@ main.init = function () {
 
 				game   = Springer({}); 
 
-				pp.push_screen(game);
+			camera = Camera.new( [0, pp.settings.width, 0, pp.settings.height] );
+			player = Player.new( 0,0,100 ); // start x,y,gravity
+
+			camera.set_look_at( player );
+
+			spotify.models.player.load("track", "position").done(function(p) {
+				game.start_new( p.track.uri );
+			});
+
+			pp.push_screen(game);
 			});
 		});
 
 	pp.run();
+
+	// start_new_game( spotify.track.uri ); // gamelevel
+
 }

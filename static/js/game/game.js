@@ -15,6 +15,7 @@ Springer = function( config )
 	screen.update = function( instance, dt, vis )
 	{
 		this.player.x += 1;
+		
 	};
 
 	screen.draw = function( instance, vis )
@@ -31,6 +32,14 @@ Springer = function( config )
 	    this.gamelevel.draw( this.camera );
 
 	};
+
+	screen.start_new = function ( uri ) {
+		
+
+		// todo clean up old level
+
+		this.level = new Gamelevel( uri );
+	}
 
 	return screen;
 }

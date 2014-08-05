@@ -22,7 +22,7 @@ spotify.position = function() {
 require(['$api/models'], function(models) {
 	spotify.models = models;
 
-	spotify.position()
+	spotify.position();
 
 	main.init();
 });
