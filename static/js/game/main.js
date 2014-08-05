@@ -6,12 +6,12 @@ main.init = function () {
 	pp     = new porcupine.instance( canvas, { debug : true } );
 	pp.log("Porcupine viewer template example");
 
-	spotify.models.player.addEventListener('change', function( arg ) {
-		// did we change track? if so, create new room!
-		// tmp_change_room( arg.data.track.uri );
-		game.start_new( arg.data.track.uri );
-		// console.warn("player changed");
-	});
+	//spotify.models.player.addEventListener('change', function( arg ) {
+	//	// did we change track? if so, create new room!
+	//	// tmp_change_room( arg.data.track.uri );
+	//	game.start_new( arg.data.track.uri );
+	//	// console.warn("player changed");
+	//});
 
 	porcupine.templates.get( [ 
 		"static/js/game/factory.js",
@@ -43,9 +43,9 @@ main.init = function () {
 
 			camera.set_look_at( player );
 
-			spotify.models.player.load("track", "position").done(function(p) {
-				game.start_new( p.track.uri );
-			});
+			//spotify.models.player.load("track", "position").done(function(p) {
+			//	game.start_new( p.track.uri );
+			//});
 
 			pp.push_screen(game);
 			});

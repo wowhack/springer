@@ -1,7 +1,7 @@
 Springer = function( config )
 {
 	var screen = porcupine.instance.prototype.empty_screen.apply(null, arguments);
-	screen.GAME_STATES = { STOPPED:1, PLAYING:2, PAUSED:3 };
+	screen.GAME_STATES = { STOPPED:1, PLAYING:2, PAUSED:3, LOADING:4 };
 
 	screen.init = function( instance )
 	{
