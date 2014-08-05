@@ -29,9 +29,11 @@ fetch_song_id = function(song, song_id) {
 
 		if (data["response"]["status"]["code"] != 0) {
 			console.log("unable to fetch echonest data for " + song_url);
+			song.available = false;
 		} else {
 			song.artist = data["response"]["track"]["artist"];
 			song.analysis_url = data["response"]["track"]["audio_summary"]["analysis_url"];
+			song.available = true;
 
 			fetch_uri(song.analysis_url, function(data) {
 				song.analysis_data = data;

@@ -49,5 +49,9 @@ require(['$api/models'], function(models) {
 	main.init();
 	echonest.init();
 
-	spotify.playing_change(function(b) {console.log("playing: ", b)});
+	//spotify.playing_change(function(b) {console.log("playing: ", b)});
+	spotify.track_change(function() {
+		// update the position now that we've changed track.
+		spotify.position();
+	});
 });
