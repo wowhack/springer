@@ -1,4 +1,4 @@
-require(['$api/models'], function(models) {
+/*require(['$api/models'], function(models) {
 
   //var album = models.Album.fromURI('spotify:album:2mCuMNdJkoyiXFhsQCLLqw');
   //models.player.playContext(album);
@@ -10,4 +10,4 @@ require(['$api/models'], function(models) {
 
   });
 
-});
+});*/

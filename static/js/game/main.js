@@ -1,40 +1,49 @@
-canvas = document.getElementById("glcanvas");
+var main = {}
 
-pp     = new porcupine.instance( canvas, { debug : true } );
-pp.log("Porcupine viewer template example");
+main.init = function () {
+	canvas = document.getElementById("glcanvas");
 
-/* 
- * Load templates and create screens
- */
-porcupine.templates.get( [ 
-	"static/js/game/factory.js",
-	"static/js/game/gamefactories.js",
-	"static/js/game/player.js",
-	"static/js/game/game.js",
-	"static/js/game/camera.js"
-	], 
-function()
-{ 
-	// här kan man ha kod
+	pp     = new porcupine.instance( canvas, { debug : true } );
+	pp.log("Porcupine viewer template example");
 
-	// todo: preloadscreen..
+	spotify.models.player.addEventListener('change', function( arg ) {
+		// did we change track? if so, create new room!
+		tmp_change_room( arg.data.track.uri );
+	});
 
-	game   = Springer({}); 
+	/*
+	 * Load templates and create screens
+	 */
+	porcupine.templates.get( [
+			"static/js/game/factory.js",
+			"static/js/game/gamefactories.js",
+			"static/js/game/player.js",
+			"static/js/game/game.js",
+			"static/js/game/camera.js"
+			],
+			function()
+			{
+			// här kan man ha kod
 
-	camera = Camera.new( [0, pp.settings.width, 0, pp.settings.height] );
-	player = Player.new( 0,0,100 ); // start x,y,gravity
+			// todo: preloadscreen..
 
-	camera.set_look_at( player );
+			game   = Springer({});
 
-	pp.push_screen(game);
-});
+			camera = Camera.new( [0, pp.settings.width, 0, pp.settings.height] );
+			player = Player.new( 0,0,100 ); // start x,y,gravity
 
-// pp.push_screen( pp.preloadscreen( {
-// 		// "box_scene" : { loader: PXF.Scene, args : ["boxtest/scene.js"] }
-// 	}, function(progress) {
-// 			if (progress < 1.0)
-// 				return;
-// 		}) // pp.preloadscreen()
-// 	);
+			camera.set_look_at( player );
 
-pp.run();
+			pp.push_screen(game);
+			});
+
+	// pp.push_screen( pp.preloadscreen( {
+	// 		// "box_scene" : { loader: PXF.Scene, args : ["boxtest/scene.js"] }
+	// 	}, function(progress) {
+	// 			if (progress < 1.0)
+	// 				return;
+	// 		}) // pp.preloadscreen()
+	// 	);
+
+	pp.run();
+}
