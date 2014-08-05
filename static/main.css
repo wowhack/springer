@@ -1,0 +1,28 @@
+
+
+#stopped_modal {
+
+	z-index: 99;
+
+	position: absolute;
+	left: 0px;
+	top: 0px;
+
+	width: 100%;
+	height: 100%;
+
+}
+
+#stopped_modal>div {
+
+	width: 80%;
+	height: 100%;
+	margin: auto;
+
+}
+
+#stopped_modal>div>div {
+
+	background: #000;
+
+}

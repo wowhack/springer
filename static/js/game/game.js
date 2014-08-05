@@ -1,6 +1,7 @@
 Springer = function( config )
 {
 	var screen = porcupine.instance.prototype.empty_screen.apply(null, arguments);
+	screen.GAME_STATES = { STOPPED:1, PLAYING:2, PAUSED:3 };
 
 	screen.init = function( instance )
 	{
@@ -8,6 +9,8 @@ Springer = function( config )
 		this.player = Player.new( 0,0,100 ); // start x,y,gravity
 
 		this.camera.set_look_at( this.player );
+
+		this.state = this.GAME_STATES.STOPPED;
 
 		this.gamelevel = new Gamelevel();
 	};
