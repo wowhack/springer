@@ -27,23 +27,27 @@ fetch_song_id = function(song, song_id) {
 	fetch_uri(song_url, function(data) {
 		song.data = data;
 
-		song.artist = data["response"]["track"]["artist"];
-		song.analysis_url = data["response"]["track"]["audio_summary"]["analysis_url"];
+		if (data["response"]["status"]["code"] != 0) {
+			console.log("unable to fetch echonest data for " + song_url);
+		} else {
+			song.artist = data["response"]["track"]["artist"];
+			song.analysis_url = data["response"]["track"]["audio_summary"]["analysis_url"];
 
-		fetch_uri(song.analysis_url, function(data) {
-			song.analysis_data = data;
-			song.beats = data["beats"];
-			song.meta = data["meta"];
-			song.track = data["track"];
-			song.bars = data["bars"];
-			song.tatums = data["tatums"];
-			song.sections = data["sections"];
-			song.segments = data["segments"];
+			fetch_uri(song.analysis_url, function(data) {
+				song.analysis_data = data;
+				song.beats = data["beats"];
+				song.meta = data["meta"];
+				song.track = data["track"];
+				song.bars = data["bars"];
+				song.tatums = data["tatums"];
+				song.sections = data["sections"];
+				song.segments = data["segments"];
 
-			if (song.completed_callback != undefined) {
-				song.completed_callback(song);
-			}
-		});
+				if (song.completed_callback != undefined) {
+					song.completed_callback(song);
+				}
+			});
+		}
 	});
 }
 
@@ -57,7 +61,11 @@ echonest.song = function(uri, completed_callback) {
 	return this;
 }
 
-
-//var song = new echonest.song("7sLaTUdRIh4e1HUSsHDTJX", function(song) {
-//		console.log("completed " + song);
-//	});
+echonest.init = function () {
+	spotify.track(function(arg) {
+		var uri = arg.track.uri;
+		echonest.current_song = new echonest.song(uri, function() {
+			console.log("echonest ready with " + uri);
+		});
+	});
+}

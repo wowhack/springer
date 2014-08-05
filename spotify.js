@@ -19,10 +19,15 @@ spotify.position = function() {
 	return spotify._position + (now - spotify._fetch_time);
 }
 
+spotify.track = function(callback) {
+	spotify.models.player.load("track").done(callback);
+}
+
 require(['$api/models'], function(models) {
 	spotify.models = models;
 
 	spotify.position();
 
 	main.init();
+	echonest.init();
 });
