@@ -1,3 +1,4 @@
+
 Springer = function( config )
 {
 	var screen = porcupine.instance.prototype.empty_screen.apply(null, arguments);
@@ -44,5 +45,13 @@ Springer = function( config )
 		this.level = new Gamelevel( uri );
 	}
 
+	screen.restart = function () {
+
+		console.log("time to start a new game:", spotify._track.uri );
+		this.start_new( spotify._track.uri );
+		
+	};
+
 	return screen;
 }
+
