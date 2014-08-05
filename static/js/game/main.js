@@ -11,7 +11,8 @@ porcupine.templates.get( [
 	"static/js/game/gamefactories.js",
 	"static/js/game/player.js",
 	"static/js/game/game.js",
-	"static/js/game/camera.js"
+	"static/js/game/camera.js",
+	"static/js/game/debugquad.js"
 	], 
 function()
 { 
