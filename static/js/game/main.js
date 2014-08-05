@@ -8,7 +8,9 @@ main.init = function () {
 
 	spotify.models.player.addEventListener('change', function( arg ) {
 		// did we change track? if so, create new room!
-		tmp_change_room( arg.data.track.uri );
+		// tmp_change_room( arg.data.track.uri );
+		start_new_game( arg.data.track.uri );
+		// console.warn("player changed");
 	});
 
 	/*
@@ -18,6 +20,7 @@ main.init = function () {
 			"static/js/game/factory.js",
 			"static/js/game/gamefactories.js",
 			"static/js/game/player.js",
+			"static/js/game/gamelevel.js",
 			"static/js/game/game.js",
 			"static/js/game/camera.js"
 			],
@@ -40,6 +43,10 @@ main.init = function () {
 
 			camera.set_look_at( player );
 
+			spotify.models.player.load("track", function ( arg ) {
+				start_new_game( arg.track.uri );
+			});
+
 			pp.push_screen(game);
 			});
 
@@ -52,4 +59,7 @@ main.init = function () {
 	// 	);
 
 	pp.run();
+
+	// start_new_game( spotify.track.uri ); // gamelevel
+
 }

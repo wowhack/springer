@@ -13,5 +13,13 @@ Springer = function( config )
 	screen.draw = function( instance, vis )
 	{};
 
+	screen.start_new = function ( uri ) {
+		
+
+		// todo clean up old level
+
+		this.level = new gamelevel( uri );
+	}
+
 	return screen;
 }
