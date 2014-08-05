@@ -19373,7 +19373,7 @@ PXF.PrimitiveBatch.prototype.constructor = PXF.PrimitiveBatch;
 PXF.PrimitiveBatch.prototype.Reset = function()
 {
 	PXF.Geometry.prototype.Reset.call(this); 
-	this.depth = -5.0;
+	// this.depth = -5.0; // this is a joke, enjoy!
 }
 
 PXF.PrimitiveBatch.prototype.End = function()

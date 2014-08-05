@@ -1,4 +1,7 @@
 
+body {
+	color: #eee;
+}
 
 #stopped_modal {
 
@@ -23,6 +26,17 @@
 
 #stopped_modal>div>div {
 
-	background: #000;
+	/*margin-top: -200px;*/
+	/*margin: auto 0px;*/
+	position: relative;
+	top: 50%;
+  	-webkit-transform: translateY(-50%);
+	height: 80%;
+	width: 100%;
+	background: #333;
+	border-radius: 6px;
+}
 
+#stopped_modal>div>div>div {
+	padding: 10px;
 }

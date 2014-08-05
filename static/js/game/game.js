@@ -1,3 +1,4 @@
+
 Springer = function( config )
 {
 	var screen = porcupine.instance.prototype.empty_screen.apply(null, arguments);
@@ -5,7 +6,7 @@ Springer = function( config )
 
 	screen.init = function( instance )
 	{
-		this.camera = Camera.new( [0, pp.settings.width, 0, pp.settings.height] );
+		this.camera = Camera.new( [0, pp.settings.width / 2.0, pp.settings.height / 2.0, pp.settings.height] );
 		this.player = Player.new( 0,200,100 ); // start x,y,gravity
 
 		this.camera.set_look_at( this.player );
@@ -17,7 +18,9 @@ Springer = function( config )
 
 	screen.update = function( instance, dt, vis )
 	{
-		this.player.update( this.gamelevel, spotify.position(), dt );
+
+		if (this.state == this.GAME_STATES.PLAYING)
+			this.player.update( this.gamelevel, spotify.position(), dt );
 		
 	};
 
@@ -42,8 +45,17 @@ Springer = function( config )
 
 		// todo clean up old level
 
-		this.level = new Gamelevel( uri );
+		this.gamelevel = new Gamelevel( uri );
+		hide_modal();
 	}
+
+	screen.restart = function () {
+
+		console.log("time to start a new game:", spotify._track.uri );
+		this.start_new( spotify._track.uri );
+		
+	};
 
 	return screen;
 }
+
