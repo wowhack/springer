@@ -33,17 +33,27 @@ Gamelevel = function( uri ) {
 
 	// build (or request from game server) track data
 
+	this.shader = new PXF.Shader(pp.ctx,
+		"static/shaders/ground.vs", 
+		"static/shaders/ground.fs",
+		true);
+
 	// TEMP, use a static track
 	this.track_segments = [
-		{s: 0, e: 200, h: 20, t: 1}, // { start, end, h = height, t = segment_type }
-		{s: 250, e: 300, h: 25, t: 1},
-		{s: 370, e: 600, h: 30, t: 1},
-		{s: 700, e: 1000, h: 20, t: 2},
-		{s: 1050, e: 1400, h: 30, t: 2}
+		{s: 0, e: 200, h: 20, t: 0}, // { start, end, h = height, t = segment_type }
+		{s: 250, e: 300, h: 25, t: 0},
+		{s: 370, e: 600, h: 30, t: 0},
+		{s: 700, e: 1000, h: 20, t: 1},
+		{s: 1050, e: 1400, h: 30, t: 1}
 	];
 
-	this.tempquad = new PXF.QuadBatch( pp.ctx );
+	this.segment_qbs = [];
+	for (var i = 0; i < 4; i += 1) {
+		this.segment_qbs.push(new PXF.QuadBatch( pp.ctx ));
+	}
 
+	// tmp
+	this.tempquad = new PXF.QuadBatch( pp.ctx );
 	this.tempquad.Reset();
 	this.tempquad.depth = 0;
 	this.tempquad.AddTopLeft(0,0,1,1);
@@ -89,68 +99,65 @@ Gamelevel.prototype.draw = function( camera ) {
 	};
 
 	shader.Unbind();
-};
-
-// 	-- reset all qbs
-// 	for i,v in ipairs(segment_qbs) do
-// 		v:Reset()
-// 	end
+/*
+	for (var i in this.segment_qbs) {
+		var v = this.segment_qbs[i];
+		v.Reset();
+	}
 	
-// 	for k,v in pairs(visible_segments) do
+	for (var i in visible_segments) {
+		var v = visible_segments[i];
+		this.segment_qbs[v.t].SetNormal( v.e-v.s, v.h, 0 );
+		this.segment_qbs[v.t].AddTopLeft( v.s, v.h, v.e-v.s, -v.h );
+	}
+ 	
+ 	//segments_qb.AddTopLeft(camera_view.s, 40, camera_view.e-camera_view.s, 10)
 
-// 		-- segment caps sizes
-// 		--local cap_w = 20
+ 	// end all qbs
+	for (var i in this.segment_qbs) {
+		var v = this.segment_qbs[i];
+		v.End()
+	}
 
-// 		segment_qbs[v["t"]]:SetNormals( { v[2]-v[1], v["h"], 0 } )
-// 		segment_qbs[v["t"]]:AddTopLeft( v[1], v["h"], v[2]-v[1], -v["h"] ) -- middle
-// 		--segment_qbs[v["t"]]:AddTopLeft( v[1]+cap_w, v["h"], v[2]-v[1]-cap_w*2, -v["h"] ) -- middle
-// 		--segment_qbs[v["t"]]:AddTopLeft( v[1], v["h"], v[1]+cap_w, -v["h"] ) -- cap left
+	var shader = this.shader;
 
-// 	end
-// 	--segments_qb:AddTopLeft(camera_view[1], 40, camera_view[2]-camera_view[1], 10)
+ 	shader.Bind();
+	shader.SetUniform("pmtx", camera_pmtx );
+	shader.SetUniform("vmtx", camera_vmtx );
+	shader.SetUniform("mmtx", mat4.identity() );
 
-// 	-- end all qbs
-// 	for i,v in ipairs(segment_qbs) do
-// 		v:Finish()
-// 	end
+	shader.SetUniform("cap_width",  25.0 );
+	shader.SetUniform("cap_height",  40.0 );
 
-// 	local shader = assets["ground_shader"]
+	shader.SetUniform("tex_left",  0 );
+	shader.SetUniform("tex_mid",   1 );
+	shader.SetUniform("tex_right", 2 );
 
-// 	shader:Bind()
-
-// 	shader:SetUniform("mat4", "pmtx", camera_pmtx )
-// 	shader:SetUniform("mat4", "vmtx", camera_vmtx )
-// 	shader:SetUniform("mat4", "mmtx", mat4.identity() )
-
-// 	shader:SetUniform("f", "cap_width",  25.0 )
-// 	shader:SetUniform("f", "cap_height",  40.0 )
-
-// 	shader:SetUniform("i", "tex_left",  0 )
-// 	shader:SetUniform("i", "tex_mid",   1 )
-// 	shader:SetUniform("i", "tex_right", 2 )
-
-// 	-- shader:SetUniform("f", "pixels_to_coords", 1.0 )
+    shader.SetUniform("pixels_to_coords", 1.0 );
 
 // 	-- draw all qbs
-// 	for i,v in ipairs(segment_qbs) do
+	for (var i in this.segment_qbs) {
+		var v = this.segment_qbs[i];
 
-// 		--print(visible_segments[i][2] - visible_segments[i][1])
-// 		-- if (visible_segments[i]) then
-// 			-- shader:SetUniform("f", "block_width", visible_segments[i][2] - visible_segments[i][1] )
-// 		-- end
+		// --print(visible_segments[i][2] - visible_segments[i][1])
+		// -- if (visible_segments[i]) then
+		// 	-- shader:SetUniform("f", "block_width", visible_segments[i][2] - visible_segments[i][1] )
+		// -- end
 
-// 		segment_textures[i].left:Bind( 0 )
-// 		segment_textures[i].mid:Bind( 1 )
-// 		segment_textures[i].right:Bind( 2 )
+		// segment_textures[i].left:Bind( 0 )
+		// segment_textures[i].mid:Bind( 1 )
+		// segment_textures[i].right:Bind( 2 )
 
-// 		v:Draw( shader )
+		v.Draw( shader )
 
-// 		segment_textures[i].right:Unbind( )
-// 		segment_textures[i].mid:Unbind( )
-// 		segment_textures[i].left:Unbind( )
-// 	end
+		// segment_textures[i].right:Unbind( )
+		// segment_textures[i].mid:Unbind( )
+		// segment_textures[i].left:Unbind( )
+	}
 
-// 	shader:Unbind()
+    shader.Unbind()
+    */
+};
 
 Gamelevel.prototype.query_segments = function ( self, view ) {
 	
