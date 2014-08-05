@@ -63,27 +63,32 @@ echonest.song = function(uri, completed_callback) {
 	return this;
 }
 
-echonest.init = function () {
-	var handle_load_echonest = function(uri) {
-		spotify.pause();
-		echonest.current_song = new echonest.song(uri, function() {
-			console.log("echonest ready with " + uri);
-			spotify.track(function () {
-				game.start_new(uri);
-				spotify.play();
-			});
+echonest.handle_load_echonest = function(uri) {
+	if (typeof(game) == "undefined")
+		return;
+	console.log("OH SHEEEIIIT");
+	spotify.pause();
+	game.state = game.GAME_STATES.LOADING;
+	echonest.current_song = new echonest.song(uri, function() {
+		console.log("echonest ready with " + uri);
+		spotify.track(function () {
+			game.start_new(uri);
+			game.state = game.GAME_STATES.PLAYING;
+			spotify.play();
 		});
-	};
+	});
+};
 
+echonest.init = function () {
 	// initial loading of echonest data.
 	spotify.track(function(arg) {
 		var uri = arg.track.uri;
-		handle_load_echonest(uri);
+		echonest.handle_load_echonest(uri);
 	});
 
 	// load of echonest data when song changes.
 	spotify.track_change(function (arg) {
 		var uri = arg.track.uri;
-		handle_load_echonest(uri);
+		echonest.handle_load_echonest(uri);
 	});
 }

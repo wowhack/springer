@@ -6,8 +6,9 @@ Springer = function( config )
 
 	screen.init = function( instance )
 	{
-		this.camera = Camera.new( [0, pp.settings.width, pp.settings.height, pp.settings.height + pp.settings.height ] );
-		this.player = Player.new( 0,200,100 ); // start x,y,gravity
+		this.camera = Camera.new( [0, pp.settings.width*4, 0, pp.settings.height *4] );
+		//this.camera = Camera.new( [0, pp.settings.width, pp.settings.height, pp.settings.height + pp.settings.height ] );
+		this.player = Player.new( 0,400,100 ); // start x,y,gravity
 
 		this.camera.set_look_at( this.player );
 
@@ -20,7 +21,13 @@ Springer = function( config )
 	{
 
 		if (this.state == this.GAME_STATES.PLAYING)
+		{
+
 			this.player.update( this.gamelevel, spotify.position(), dt );
+			// console.log("pruppdate");
+		} else {
+			console.log( "not playrign", this.state );
+		}
 		
 	};
 
@@ -35,6 +42,8 @@ Springer = function( config )
 	    gl.clearColor( 0.25, 0.25, 0.25, 1 );
 	    gl.clear( gl.COLOR_BUFFER_BIT );
 
+	    pp.ctx.FullscreenPass( pp.ctx.Shaderlib.forward, { uPMatrix : mat4.identity(), uMVMatrix : mat4.identity(), tex0 : pp.get_resource("bg_0") }, { normal : false, position : true, uv0 : true } );
+
 	    this.gamelevel.draw( this.camera );
 	    this.player.draw( this.camera );
 
@@ -47,6 +56,8 @@ Springer = function( config )
 
 		this.gamelevel = new Gamelevel( uri );
 		hide_modal();
+
+		this.player.reset();
 	}
 
 	screen.restart = function () {

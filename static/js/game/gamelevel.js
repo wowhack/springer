@@ -55,16 +55,18 @@ Gamelevel = function( uri ) {
 
 	var sections = echonest.current_song.sections;
 	var last_key = 0;
+
+	console.log("generating segments");
 	for (var i in sections) {
 		var section = sections[i];
-		var start = section.start * 100;
-		var end = start + section.duration * 100;
+		var start = section.start * 500;
+		var end = start + section.duration * 500;
 
 		var loudness = Math.abs(section.loudness);
 
 		for (var cur_start = start; cur_start < end; ) {
 			// start, end
-			var length = 30 * loudness;
+			var length = 60 * loudness;
 			var s = cur_start;
 			var e = s + length;
 
@@ -265,7 +267,7 @@ Gamelevel.prototype.query_segments = function ( view ) {
 		// console.log("i " .. i )
 
 		if ( i == last_last_i || i < bound_s || i > bound_f) {
-			console.log("no segments found",i);
+			// console.log("no segments found");
 			break;
 		}
 

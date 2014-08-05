@@ -30,7 +30,9 @@ main.init = function () {
 
 					pp.push_screen( pp.preloadscreen( {
 						// "box_scene" : { loader: PXF.Scene, args : ["boxtest/scene.js"] }
-						"ground_0" : { loader: PXF.Texture, args : ["texture/ground_0.png"] }
+						"ground_0" : { loader: PXF.Texture, args : ["texture/ground_0.png"] },
+						"body_0" : { loader: PXF.Texture, args : ["texture/jerry_body_0.png"] },
+						"bg_0" : { loader: PXF.Texture, args : ["texture/bg_0.png"] }
 					}, function(progress) {
 							if (progress < 1.0)
 								return;
@@ -45,6 +47,7 @@ main.init = function () {
 							// todo: preloadscreen..
 
 							game   = Springer({}); 
+							echonest.handle_load_echonest();
 
 							// camera = Camera.new( [0, pp.settings.width, 0, pp.settings.height] );
 							// player = Player.new( 0, 0, 100 ); // start x,y,gravity

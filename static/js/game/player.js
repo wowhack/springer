@@ -5,7 +5,7 @@ Player.proto.init = function( x,y, gravity ) {
 
 	this.init_position = [x,y];
 	this.set_position(x,y);
-	this.set_scale([32,32]);
+	this.set_scale([179,203]);
 	// this.debug_quad    = Debugquad.new( x,y, [32,32] );
 	this.gravity       = gravity || 1;
 	this.forward_speed = 80 * 2;
@@ -30,6 +30,10 @@ Player.proto.init = function( x,y, gravity ) {
 	this.qb.AddCentered( 0,0,1,1);
 	this.qb.End();
 
+	this.textures = {
+		body_0 : pp.get_resource("body_0")
+	};
+
 	// -- this.jumpstate.jump_velocity = 1500 * 3
 
 	this.jumpstate.jump_velocity = 1500 * 5.0
@@ -45,6 +49,8 @@ Player.proto.init = function( x,y, gravity ) {
 Player.proto.reset = function() {
 	this.x = this.init_position[0];
 	this.y = this.init_position[1];
+	this.velocity = [0,0];
+	this.force = [0,0];
 }
 
 Player.proto.do_jump = function() {
@@ -76,7 +82,7 @@ Player.proto.update = function ( level, track_pos, dt ) {
 	// console.log(this.gravity * dt);
 
 	// this.x = this.x + this.velocity[1] * dt + this.forward_speed * dt
-	this.x = track_pos / 10.0;
+	this.x = track_pos / 20;
 	this.y = this.y + this.velocity[1] * dt 
 
 	this.force = [0,0];
@@ -130,7 +136,7 @@ Player.proto.update = function ( level, track_pos, dt ) {
 
 				// console.log("missed?");
 
-				this.y = v.h + this.s[1];
+				this.y = v.h + this.s[1] / 2;
 				this.jumpstate.enable();
 				this.jump_critical_time = this.jump_critical_reset;
 				this.velocity[1] = 0;
@@ -143,10 +149,10 @@ Player.proto.update = function ( level, track_pos, dt ) {
 
 Player.proto.draw = function ( camera ) {
 
-	var shader = pp.ctx.Shaderlib.forwardSolidColor;
+	var shader = pp.ctx.Shaderlib.forward;
 
 	shader.Bind();
-	shader.SetUniform("color",[1,1,1]);
+	// shader.SetUniform("color",[0,0,0]);
 
 	var camera_view = camera.get_screen_coords()
 	camera_view = [ camera_view[0][0], camera_view[1][0] ];
@@ -164,25 +170,27 @@ Player.proto.draw = function ( camera ) {
 		mat4.translate( player_mtx, [ 0, Math.sin( this.wobble_value) * this.wobble_amp, 0 ] ); 
 	};
 
-	mat4.translate( player_mtx, [ this.x, this.y, 0 ] ); 
-	mat4.scale( player_mtx, [ 32, 32, 1 ] ); 
+	mat4.translate( player_mtx, [ this.x, this.y + 160, 0 ] ); 
+	mat4.scale( player_mtx, [ this.s[0], this.s[1], 1 ] ); 
 
 	mat4.multiply( camera_vmtx,player_mtx,player_mtx);
 
 	shader.SetUniform( "uMVMatrix", player_mtx );
 
+	// shader.SetUniform( "tex0", this.textures.body_0 );
+
 	// console.log( player_mtx );
 
 	// shader.SetUniform( "mmtx", player_mtx )
 
-	// shader:SetUniform("i", "tex0",  0 )
+	shader.SetUniform("i", "tex0",  0 )
 
-	// tex:Bind( 0 )
+	this.textures.body_0.Bind( 0 );
 	// this.debug_quad.Draw( shader );
 
-	this.qb.BindBuffers( shader, { position : true, uv0 : false});
+	this.qb.BindBuffers( shader, { position : true, uv0 : true});
 	this.qb.DrawBuffers( shader );
-	this.qb.UnbindBuffers( shader, {position : true, uv0 : false});
+	this.qb.UnbindBuffers( shader, {position : true, uv0 : true});
 
 	shader.Unbind();
 
