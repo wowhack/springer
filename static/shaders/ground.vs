@@ -15,7 +15,8 @@ varying vec3 v_color;
 
 void main()
 {
-	v_uv0   = vec2(uv0.s, 1.0 - uv0.t);
+	// v_uv0   = vec2(uv0.s, uv0.t);
+	v_uv0   = uv0;
 	//v_color = normal;
 	block_width = normal.x;
 	block_height = normal.y;

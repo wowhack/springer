@@ -122,7 +122,8 @@ Gamelevel.prototype.draw = function( camera ) {
 	for (var i in visible_segments) {
 		var v = visible_segments[i];
 		this.segment_qbs[v.t].SetNormal( v.e-v.s, v.h, 0 );
-		this.segment_qbs[v.t].AddTopLeft( v.s, v.h, v.e-v.s, -v.h );
+		// this.segment_qbs[v.t].AddTopLeft( v.s, v.h, v.e-v.s, -v.h );
+		this.segment_qbs[v.t].AddTopLeft( v.s, v.h, v.e-v.s, 32 );
 		// this.segment_qbs[v.t].depth = 0;
 		// this.segment_qbs[v.t].AddTopLeft( 0, 0, 1000, 1000 );
 	}
@@ -144,10 +145,10 @@ Gamelevel.prototype.draw = function( camera ) {
 	shader.SetUniform("vmtx", camera_vmtx );
 	shader.SetUniform("mmtx", mat4.identity() );
 
-	shader.SetUniform("cap_width",  25.0 );
-	shader.SetUniform("cap_height",  40.0 );
+	shader.SetUniform("cap_width", 25.0 );
+	shader.SetUniform("cap_height", 40.0 );
 
-	shader.SetUniform("tex0",  0 );
+	shader.SetUniform("tex0", 0 );
 	// shader.SetUniform("tex_mid",   1 );
 	// shader.SetUniform("tex_right", 2 );
 
@@ -168,9 +169,9 @@ Gamelevel.prototype.draw = function( camera ) {
 		pp.get_resource( "ground_0" ).Bind( 0 );
 
 		//v.Draw( shader );
-		v.BindBuffers( shader, { position : true, uv0 : true});
+		v.BindBuffers( shader, { position : true, uv0 : true, normal: true});
 		v.DrawBuffers( shader );
-		v.UnbindBuffers( shader, {position : true, uv0 : true});
+		v.UnbindBuffers( shader, {position : true, uv0 : true, normal: true});
 
 		// segment_textures[i].right:Unbind( )
 		// segment_textures[i].mid:Unbind( )
