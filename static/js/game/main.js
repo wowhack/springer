@@ -9,7 +9,7 @@ main.init = function () {
 	spotify.models.player.addEventListener('change', function( arg ) {
 		// did we change track? if so, create new room!
 		// tmp_change_room( arg.data.track.uri );
-		start_new_game( arg.data.track.uri );
+		game.start_new( arg.data.track.uri );
 		// console.warn("player changed");
 	});
 
@@ -43,8 +43,8 @@ main.init = function () {
 
 			camera.set_look_at( player );
 
-			spotify.models.player.load("track", function ( arg ) {
-				start_new_game( arg.track.uri );
+			spotify.models.player.load("track", "position").done(function(p) {
+				game.start_new( p.track.uri );
 			});
 
 			pp.push_screen(game);

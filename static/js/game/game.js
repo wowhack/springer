@@ -8,6 +8,7 @@ Springer = function( config )
 
 	screen.update = function( instance, dt, vis )
 	{
+		
 	};
 
 	screen.draw = function( instance, vis )
