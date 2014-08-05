@@ -39,20 +39,31 @@ Gamelevel = function( uri ) {
 		true);
 
 	// TEMP, use a static track
-	this.track_segments = [
-		{s: 0, e: 200, h: 20, t: 0}, // { start, end, h = height, t = segment_type }
-		{s: 250, e: 300, h: 25, t: 0},
-		{s: 370, e: 600, h: 30, t: 0},
-		{s: 700, e: 1000, h: 20, t: 1},
-		{s: 1050, e: 1400, h: 30, t: 1}
-	];
+	//this.track_segments = [
+	//	{s: 0, e: 200, h: 20, t: 1}, // { start, end, h = height, t = segment_type }
+	//	{s: 250, e: 300, h: 25, t: 1},
+	//	{s: 370, e: 600, h: 30, t: 1},
+	//	{s: 700, e: 1000, h: 20, t: 2},
+	//	{s: 1050, e: 1400, h: 30, t: 2}
+	//];
+	this.track_segments = [];
+	var cur_start = 0;
+	var max_x = spotify._length / 10.0 - 100;
+	for (var i = 0; cur_start < max_x; i = i + 1) {
+		cur_start = cur_start + 200;
+		var s = cur_start;
+		var e = s + 200;
+		var h = (i % 2 == 0) ? 25 : 30;
+		var t = (i % 2 == 0) ? 0 : 1;
+
+		this.track_segments.push({s: s, e: e, h: h, t: t});
+	}
 
 	this.segment_qbs = [];
 	for (var i = 0; i < 4; i += 1) {
 		var qb = new PXF.QuadBatch( pp.ctx );
 		qb.depth = 0;
 		this.segment_qbs.push( qb );
-
 	}
 
 	// tmp

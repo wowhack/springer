@@ -42,7 +42,7 @@ Springer = function( config )
 
 		// todo clean up old level
 
-		this.level = new Gamelevel( uri );
+		this.gamelevel = new Gamelevel( uri );
 		hide_modal();
 	}
 

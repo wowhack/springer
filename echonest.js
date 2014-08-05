@@ -68,8 +68,10 @@ echonest.init = function () {
 		spotify.pause();
 		echonest.current_song = new echonest.song(uri, function() {
 			console.log("echonest ready with " + uri);
-			spotify.play();
-			game.start_new(uri);
+			spotify.track(function () {
+				game.start_new(uri);
+				spotify.play();
+			});
 		});
 	};
 

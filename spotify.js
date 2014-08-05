@@ -20,13 +20,17 @@ spotify.position = function() {
 	}
 
 	var now = curTime();
-	if (now - spotify._fetch_time > 5000)
-		update_track();
+	//if (now - spotify._fetch_time > 5000)
+	//	update_track();
 	return spotify._position + (now - spotify._fetch_time);
 }
 
 spotify.track = function(callback) {
-	spotify.models.player.load("track").done(callback);
+	spotify.models.player.load("track").done(function(d) {
+		spotify._length = d.duration;
+		spotify._track = d.track;
+		callback(d);
+	});
 }
 
 spotify.track_change = function(callback) {
