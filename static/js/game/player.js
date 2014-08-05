@@ -4,6 +4,6 @@ Player.proto.init = function( x,y, gravity ) {
 };
 
 Player.proto.update = function ( track_pos ) {
-	this.x = spotify.position() / 1000.0;
-	console.log(this.x);
+	this.x = track_pos;
+	// console.log(this.x);
 }

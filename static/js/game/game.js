@@ -14,7 +14,7 @@ Springer = function( config )
 
 	screen.update = function( instance, dt, vis )
 	{
-		this.player.x += 1;
+		this.player.update( spotify.position() );
 		
 	};
 
