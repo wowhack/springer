@@ -28,7 +28,7 @@ main.init = function () {
 			// realtime analysis setup
 			require(["static/js/game/realtime"],
 				function(realtime) {
-					realtime.init();
+					realtime.init(spotify.models.player);
 				});
 
 			// todo: preloadscreen..

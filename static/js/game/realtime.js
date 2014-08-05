@@ -1,7 +1,6 @@
 require([
-  '$api/models',
   '$api/audio',
-], function (models, audio) {
+], function (audio) {
   'use strict';
 
 /*
@@ -31,8 +30,8 @@ There are three events:
     }
   };
 
-  var init = function() {
-  	var analyzer = audio.RealtimeAnalyzer.forPlayer(models.player, audio.BANDS31);
+  var init = function(player) {
+    var analyzer = audio.RealtimeAnalyzer.forPlayer(player, audio.BANDS31);
     analyzer.addEventListener("audio", audio_event_handlers.audio);
     analyzer.addEventListener("pause", audio_event_handlers.pause);
     analyzer.addEventListener("reset", audio_event_handlers.reset);
