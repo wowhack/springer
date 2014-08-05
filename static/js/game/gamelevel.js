@@ -145,7 +145,7 @@ Gamelevel.prototype.draw = function( camera ) {
 	shader.SetUniform("vmtx", camera_vmtx );
 	shader.SetUniform("mmtx", mat4.identity() );
 
-	shader.SetUniform("cap_width", 25.0 );
+	shader.SetUniform("cap_width", 130.0 );
 	shader.SetUniform("cap_height", 40.0 );
 
 	shader.SetUniform("tex0", 0 );

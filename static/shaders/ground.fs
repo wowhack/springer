@@ -18,7 +18,7 @@ void main()
 	// recalc texture coords
 	vec2 new_uv = v_uv0;
 	// new_uv.s = (new_uv.s * block_width) * 0.001;
-	//new_uv.s = (new_uv.s * block_width); // pixels
+	new_uv.s = (new_uv.s * block_width); // pixels
 	//new_uv.t = (new_uv.t * block_height); // pixels
 	//new_uv.t = (new_uv.t * block_width); // pixels
 
@@ -32,28 +32,28 @@ void main()
 	}*/
 	//float lol_internet = new_uv.s * 2.0 / 2.0;
 	//if (lol_internet < 0.5)
-	if ( 0.5 >= v_uv0.s )
-	{
-		//gl_FragColor = texture2D( tex0, new_uv );
-		gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-		return;
-	}
-
-	// if (new_uv.s < cap_width)
+	//if ( 0.5 >= v_uv0.s )
 	// {
-	// 	new_uv.s = new_uv.s / cap_width;
-	// 	gl_FragColor = texture2D( tex0, new_uv );
-	// 	return;
-
-	// } else if (new_uv.s > block_width - cap_width)
-	// {
-	// 	new_uv.s = (new_uv.s - (block_width - cap_width)) / cap_width;
-	// 	gl_FragColor = texture2D( tex0, new_uv );
+	// 	//gl_FragColor = texture2D( tex0, new_uv );
+	// 	gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 	// 	return;
 	// }
 
-	//new_uv.s *= 0.003;
-	//new_uv.s = mod(new_uv.s, 1.0);
+	if (new_uv.s < cap_width)
+	{
+		new_uv.s = new_uv.s / cap_width;
+		gl_FragColor = texture2D( tex0, new_uv );
+		return;
+
+	} else if (new_uv.s > block_width - cap_width)
+	{
+		new_uv.s = (new_uv.s - (block_width - cap_width)) / cap_width;
+		gl_FragColor = texture2D( tex0, new_uv );
+		return;
+	}
+
+	new_uv.s *= 0.003;
+	new_uv.s = mod(new_uv.s, 1.0);
 
 	//gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 	gl_FragColor = texture2D( tex0, new_uv );
