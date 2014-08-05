@@ -1,41 +1,44 @@
-canvas = document.getElementById("glcanvas");
+var main = {}
 
-pp     = new porcupine.instance( canvas, { debug : true } );
-pp.log("Porcupine viewer template example");
+main.init = function () {
+	canvas = document.getElementById("glcanvas");
 
-/* 
- * Load templates and create screens
- */
+	pp     = new porcupine.instance( canvas, { debug : true } );
+	pp.log("Porcupine viewer template example");
 
-porcupine.templates.get( [ 
-	"static/js/game/factory.js",
-	"static/js/game/gamefactories.js" ], function() {
-
-		porcupine.templates.get( [ 
-			"static/js/game/player.js",
-			"static/js/game/game.js",
-			"static/js/game/camera.js",
-			"static/js/game/gamelevel.js",
-			"static/js/game/debugquad.js"
-			], 
-		function()
-		{ 
-			// här kan man ha kod
-
-			// todo: preloadscreen..
-
-			game   = Springer({}); 
-
-			pp.push_screen(game);
-		});
+	spotify.models.player.addEventListener('change', function( arg ) {
+		// did we change track? if so, create new room!
+		tmp_change_room( arg.data.track.uri );
 	});
 
-// pp.push_screen( pp.preloadscreen( {
-// 		// "box_scene" : { loader: PXF.Scene, args : ["boxtest/scene.js"] }
-// 	}, function(progress) {
-// 			if (progress < 1.0)
-// 				return;
-// 		}) // pp.preloadscreen()
-// 	);
+	porcupine.templates.get( [ 
+		"static/js/game/factory.js",
+		"static/js/game/gamefactories.js" ], function() {
 
-pp.run();
+			porcupine.templates.get( [ 
+				"static/js/game/player.js",
+				"static/js/game/game.js",
+				"static/js/game/camera.js",
+				"static/js/game/gamelevel.js",
+				"static/js/game/debugquad.js"
+				], 
+			function()
+			{ 
+				// här kan man ha kod
+
+				// realtime analysis setup
+				require(["static/js/game/realtime"],
+					function(realtime) {
+						realtime.init(spotify.models.player);
+					});
+
+				// todo: preloadscreen..
+
+				game   = Springer({}); 
+
+				pp.push_screen(game);
+			});
+		});
+
+	pp.run();
+}
