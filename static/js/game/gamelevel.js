@@ -47,16 +47,40 @@ Gamelevel = function( uri ) {
 	//	{s: 1050, e: 1400, h: 30, t: 2}
 	//];
 	this.track_segments = [];
-	var cur_start = 0;
-	var max_x = spotify._length / 10.0 - 100;
-	for (var i = 0; cur_start < max_x; i = i + 1) {
-		cur_start = cur_start + 200;
-		var s = cur_start;
-		var e = s + 200;
-		var h = (i % 2 == 0) ? 25 : 30;
-		var t = (i % 2 == 0) ? 0 : 1;
+	console.log(echonest.current_song);
 
-		this.track_segments.push({s: s, e: e, h: h, t: t});
+	var max_slopiness = 0.1;
+
+	var sections = echonest.current_song.sections;
+	var last_key = 0;
+	for (var i in sections) {
+		var section = sections[i];
+		var start = section.start * 100;
+		var end = start + section.duration * 100;
+
+		var loudness = Math.abs(section.loudness);
+
+		for (var cur_start = start; cur_start < end; ) {
+			// start, end
+			var length = 30 * loudness;
+			var s = cur_start;
+			var e = s + length;
+
+			// height
+			var h = 10 * section.key;
+			h = (1.0 - max_slopiness) * last_key + max_slopiness * h;
+			last_key = h;
+
+			// type
+			var t = (i % 2 == 0) ? 0 : 1;
+
+			if (e > end)
+				e = end;
+
+			this.track_segments.push({s: s, e: e, h: h, t: t});
+
+			cur_start += length + 40;
+		}
 	}
 
 	this.segment_qbs = [];
