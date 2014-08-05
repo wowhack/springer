@@ -6,16 +6,18 @@ curTime = function() {
 }
 
 update_track = function() {
-	spotify.models.player.load("track", "position").done(function(p) {
+	spotify.models.player.load("track", "position", "playing").done(function(p) {
 		spotify._position = p.position;
 		spotify._track = p.track;
+		spotify._playing = p.playing;
 		spotify._fetch_time = curTime();
 	});
 }
 
 spotify.position = function() {
 	var now = curTime();
-	update_track();
+	if (now - spotify._fetch_time > 5000)
+		update_track();
 	return spotify._position + (now - spotify._fetch_time);
 }
 
@@ -44,7 +46,7 @@ spotify.playing_change = function(callback) {
 require(['$api/models'], function(models) {
 	spotify.models = models;
 
-	spotify.position();
+	update_track()
 
 	main.init();
 	echonest.init();
