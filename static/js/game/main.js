@@ -25,6 +25,12 @@ main.init = function () {
 			{
 			// här kan man ha kod
 
+			// realtime analysis setup
+			require(["static/js/game/realtime"],
+				function(realtime) {
+					realtime.init();
+				});
+
 			// todo: preloadscreen..
 
 			game   = Springer({});
