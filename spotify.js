@@ -75,4 +75,10 @@ require(['$api/models'], function(models) {
 		spotify._playing = arg.playing;
 		spotify._fetch_time = curTime();
 	});
+
+	spotify.models.player.addEventListener("change:position", function (arg) {
+		spotify._position = arg.target.position;
+		spotify._playing = arg.target.playing;
+		spotify._fetch_time = curTime();
+	})
 });
