@@ -43,6 +43,7 @@ Springer = function( config )
 		// todo clean up old level
 
 		this.level = new Gamelevel( uri );
+		hide_modal();
 	}
 
 	screen.restart = function () {

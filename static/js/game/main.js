@@ -56,3 +56,19 @@ main.init = function () {
 	// start_new_game( spotify.track.uri ); // gamelevel
 
 }
+
+// dont be mad, i put function here..
+
+function show_modal () {
+
+	var elem = document.getElementById("stopped_modal");
+	elem.style.display = "none";
+
+}
+
+function hide_modal () {
+
+	var elem = document.getElementById("stopped_modal");
+	elem.style.display = "block";
+
+}
