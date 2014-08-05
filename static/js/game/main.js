@@ -6,29 +6,29 @@ pp.log("Porcupine viewer template example");
 /* 
  * Load templates and create screens
  */
+
 porcupine.templates.get( [ 
 	"static/js/game/factory.js",
-	"static/js/game/gamefactories.js",
-	"static/js/game/player.js",
-	"static/js/game/game.js",
-	"static/js/game/camera.js",
-	"static/js/game/debugquad.js"
-	], 
-function()
-{ 
-	// här kan man ha kod
+	"static/js/game/gamefactories.js" ], function() {
 
-	// todo: preloadscreen..
+		porcupine.templates.get( [ 
+			"static/js/game/player.js",
+			"static/js/game/game.js",
+			"static/js/game/camera.js",
+			"static/js/game/gamelevel.js",
+			"static/js/game/debugquad.js"
+			], 
+		function()
+		{ 
+			// här kan man ha kod
 
-	game   = Springer({}); 
+			// todo: preloadscreen..
 
-	camera = Camera.new( [0, pp.settings.width, 0, pp.settings.height] );
-	player = Player.new( 0,0,100 ); // start x,y,gravity
+			game   = Springer({}); 
 
-	camera.set_look_at( player );
-
-	pp.push_screen(game);
-});
+			pp.push_screen(game);
+		});
+	});
 
 // pp.push_screen( pp.preloadscreen( {
 // 		// "box_scene" : { loader: PXF.Scene, args : ["boxtest/scene.js"] }
