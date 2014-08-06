@@ -9,13 +9,15 @@ Springer = function( config )
 		var offs = pp.settings.height / 1.8;
 		this.camera = Camera.new( [0, pp.settings.width*1.3, offs, pp.settings.height*1.3 + offs] );
 		//this.camera = Camera.new( [0, pp.settings.width, pp.settings.height, pp.settings.height + pp.settings.height ] );
-		this.player = Player.new( 50,500,100 ); // start x,y,gravity
+		this.player = Player.new( 50,500, 150 ); // start x,y,gravity
 
 		this.camera.set_look_at( this.player );
 
 		this.state = this.GAME_STATES.STOPPED;
 
 		this.gamelevel = new Gamelevel();
+
+		this.neg_score_div = document.getElementById("score_dead");
 
 		this.score_value = 1;
 
@@ -35,9 +37,18 @@ Springer = function( config )
 		console.log("Oh he dead..");
 
 		var amazing_race = this.gamelevel.amazing_grace( this.player.x, this.player.x + 400);
-
 		
 		this.player.y = amazing_race.h+200;
+
+		this.player.reset_blinking_timer = 0;
+
+		this.score -= 500;
+
+		this.do_neg_score = true;
+		this.neg_score_div.style.top = "65px";
+		this.neg_score_div.innerHTML = "-500";
+
+		// this.neg_score_div = neg_score_div;
 	}
 
 	screen.update = function( instance, dt, vis )
@@ -49,7 +60,7 @@ Springer = function( config )
 
 		if (this.state == this.GAME_STATES.PLAYING)
 		{
-			if ( gestures.tap )
+			if ( gestures.touch )
 			{
 				this.player.do_jump();
 			}
@@ -58,8 +69,39 @@ Springer = function( config )
 			// console.log("pruppdate");
 		} else {
 			console.log( "not playrign", this.state );
+		};
+
+		if ( this.do_neg_score )
+		{
+			console.log("doing negative score..");
+
+			// console.log(this.)
+
+			this.neg_score_div.style.display = "block";
+
+			if(this.neg_score_div_timer === undefined)
+			{
+				this.neg_score_div_timer = 0;
+			} else {
+				this.neg_score_div_timer += 0.025;
+			};
+
+			if ( this.neg_score_div_timer > 3.5 )
+			{
+				console.log("die");
+
+				this.neg_score_div.style.top     = "15px";
+				// this.neg_score_div.style.display = "none";
+
+				this.neg_score_div.innerHTML = "";
+
+				delete this.neg_score_div_timer;
+				delete this.do_neg_score;
+			};
+		} else {
+			// this.neg_score_div.style.top = "15px";
+			// this.neg_score_div.style.top = "15px";
 		}
-		
 	};
 
 	screen.draw = function( instance, vis )

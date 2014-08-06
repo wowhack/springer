@@ -34,6 +34,11 @@ Player.proto.init = function( x,y, gravity ) {
 		body_0 : pp.get_resource("body_0")
 	};
 
+	this.shader = new PXF.Shader(pp.ctx,
+		"static/shaders/gubbjaevel.vs", 
+		"static/shaders/gubbjaevel.fs",
+		true);
+
 	// -- this.jumpstate.jump_velocity = 1500 * 3
 
 	// this.playerstate = "dead";
@@ -174,19 +179,25 @@ Player.proto.update = function ( level, track_pos, dt ) {
 
 			this.last_segment = k;
 		}
-
-		game.tick_score();
 	};
 
 	if ( segment_missed && this.player_dead_timer === undefined )
 	{
 		this.player_dead_timer = 0;
+	} else {
+		if ( this.player_dead_timer === undefined )
+		{
+			game.tick_score();
+		}
 	}
+
+	this.dt = dt;
 };
 
 Player.proto.draw = function ( camera ) {
 
-	var shader = pp.ctx.Shaderlib.forward;
+	// var shader = pp.ctx.Shaderlib.forward;
+	var shader = this.shader;
 
 	shader.Bind();
 	// shader.SetUniform("color",[0,0,0]);
@@ -207,12 +218,29 @@ Player.proto.draw = function ( camera ) {
 		mat4.translate( player_mtx, [ 0, Math.sin( this.wobble_value) * this.wobble_amp, 0 ] ); 
 	};
 
-	//mat4.translate( player_mtx, [ this.x, this.y + 160, 0 ] ); 
-	//mat4.scale( player_mtx, [ this.s[0], this.s[1], 1 ] ); 
-
 	mat4.multiply( camera_vmtx, player_mtx, player_mtx );
 
 	shader.SetUniform( "uMVMatrix", player_mtx );
+
+	var alpha = 1;
+
+	if ( this.player_dead_timer !== undefined )
+	{
+		alpha = 1 - this.player_dead_timer / 5;
+	};
+
+
+	if ( this.reset_blinking_timer !== undefined )
+	{
+		this.reset_blinking_timer += this.dt;
+
+		alpha = this.reset_blinking_timer / 1;
+
+		if ( this.reset_blinking_timer > 1 )
+			delete this.reset_blinking_timer;
+	}
+
+	shader.SetUniform( "alpha", alpha );
 
 	// shader.SetUniform( "tex0", this.textures.body_0 );
 
