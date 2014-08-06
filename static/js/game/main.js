@@ -47,7 +47,10 @@ main.init = function () {
 							// todo: preloadscreen..
 
 							game   = Springer({}); 
-							echonest.handle_load_echonest();
+							spotify.track(function(arg) {
+									var uri = arg.track.uri;
+									echonest.handle_load_echonest(uri);
+								});
 
 							// camera = Camera.new( [0, pp.settings.width, 0, pp.settings.height] );
 							// player = Player.new( 0, 0, 100 ); // start x,y,gravity

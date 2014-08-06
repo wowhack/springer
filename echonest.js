@@ -66,7 +66,6 @@ echonest.song = function(uri, completed_callback) {
 echonest.handle_load_echonest = function(uri) {
 	if (typeof(game) == "undefined")
 		return;
-	console.log("OH SHEEEIIIT");
 	spotify.pause();
 	game.state = game.GAME_STATES.LOADING;
 	echonest.current_song = new echonest.song(uri, function() {
