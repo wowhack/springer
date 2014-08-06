@@ -17,7 +17,6 @@ Springer = function( config )
 
 		this.gamelevel = new Gamelevel();
 
-
 		this.score_value = 1;
 
 		this.reset_score();
@@ -33,7 +32,7 @@ Springer = function( config )
 		this.logoqb = new PXF.QuadBatch( pp.ctx );
 		this.logoshader = new PXF.Shader( pp.ctx, "static/shaders/logo.vs", "static/shaders/logo.fs", true);
 		this.logo_wobble = 0;
-
+		this.particlerunner = new ParticleRunner();
 	};
 
 	screen.player_dead = function()
@@ -90,6 +89,8 @@ Springer = function( config )
 
 	    this.gamelevel.draw( this.camera );
 	    this.player.draw( this.camera );
+	    this.particlerunner.update();
+	    this.particlerunner.draw( this.camera );
 
 	    	    // Draw logo
 	    var logomat = mat4.identity();
@@ -117,7 +118,6 @@ Springer = function( config )
 	screen.tick_score = function() {
 		this.score += this.score_value;
 		this.update_score();
-
 	};
 
 	screen.reset_score = function() 
@@ -136,6 +136,7 @@ Springer = function( config )
 
 		this.gamelevel.amazing_grace( 0, 1000 );
 		this.player.reset();
+		this.particlerunner.create_korvparty(50, this.player.x, this.player.y);
 	}
 
 	screen.restart = function () {
