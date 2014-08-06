@@ -211,7 +211,10 @@ Gamelevel.prototype.draw = function( camera ) {
 		scrolling = 0
 	}
 
+	var world = mat4.identity();
+	mat4.scale(world, vec3.create([730 / pp.settings.width, 600 / pp.settings.height, 1.0]), world);
 	mshader.SetUniform("backblend", 1.0);
+	mshader.SetUniform("world", world);
 	for (var i = 0; i < bigs.length; i+=1) {
 		bigs[i] -= scrolling/300;
 		if (bigs[i] < -2.0) {
