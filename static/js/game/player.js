@@ -31,7 +31,7 @@ Player.proto.init = function( x,y, gravity ) {
 	this.qb.End();
 
 	this.textures = {
-		body_0 : pp.get_resource("body_0")
+		body_0 : pp.get_resource("jerry")
 	};
 
 	this.jerryshader = new PXF.Shader( pp.ctx, "static/shaders/jerry.vs", "static/shaders/jerry.fs", true);
@@ -50,6 +50,19 @@ Player.proto.init = function( x,y, gravity ) {
 		this.jump_ok = true
 	}
 };
+
+function calc_cell_data( cell, cells, rows )
+{
+	
+  var sdt = 1.0 / cells
+  var tdt = 1.0 / rows
+
+  var s = (cell % cells) * sdt
+  var t = (Math.floor( cell / cells )) * tdt
+
+  return { s : s, t : t, sdt : sdt, tdt : tdt }
+
+}
 
 Player.proto.reset = function() {
 	this.x            = this.init_position[0];
@@ -108,9 +121,27 @@ Player.proto.update = function ( level, track_pos, dt ) {
 	// var p_miny = this.y - this.s[1];
 	// var p_maxy = this.y + this.s[1];
 
-
 	this.qb.Reset();
 	this.qb.depth = 0;
+
+	///// right hand
+	var cell_data = calc_cell_data( 0, 2, 2 )
+	var s = cell_data.s
+	var t = cell_data.t
+	var sdt = cell_data.sdt
+	var tdt = cell_data.tdt
+
+	this.qb.SetCoords(
+                          s, t,
+                      s+sdt, t,
+                      s+sdt, t+tdt,
+                          s, t+tdt,
+                    0);
+	// this.qb.AddCentered( this.x, this.y+this.s[1], this.s[0], -this.s[1] )
+	// this.qb:AddCentered( self.x + 14 + math.sin(self.wobble_value * 0.6 + math.pi) * 0.2, self.y-17+wobble_y, 32, 32, math.sin(self.wobble_value * 0.6 + math.pi) * 0.3 + 0.5 )
+
+
+
 	// this.qb.AddCentered( this.x, this.y, this.s[0]*2, this.s[1]*2);
 	this.qb.AddTopLeft( this.x, this.y+this.s[1], this.s[0], -this.s[1]);
 	this.qb.End();
@@ -187,6 +218,9 @@ Player.proto.update = function ( level, track_pos, dt ) {
 		this.player_dead_timer = 0;
 	}
 };
+
+
+
 
 Player.proto.draw = function ( camera ) {
 
