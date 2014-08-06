@@ -17,6 +17,7 @@ Springer = function( config )
 
 		this.gamelevel = new Gamelevel();
 
+
 		this.score_value = 1;
 
 		this.reset_score();
@@ -28,6 +29,11 @@ Springer = function( config )
 				game.state = screen.GAME_STATES.PLAYING;
 			}
 		});
+
+		this.logoqb = new PXF.QuadBatch( pp.ctx );
+		this.logoshader = new PXF.Shader( pp.ctx, "static/shaders/logo.vs", "static/shaders/logo.fs", true);
+		this.logo_wobble = 0;
+
 	};
 
 	screen.player_dead = function()
@@ -59,6 +65,12 @@ Springer = function( config )
 		} else {
 			console.log( "not playrign", this.state );
 		}
+
+		this.logo_wobble += dt*2;
+		this.logoqb.Reset();
+		this.logoqb.depth = 0;
+		this.logoqb.AddCentered(120, 100, 512 / 3, 405 / 3, Math.sin(this.logo_wobble*2) * 0.1);
+		this.logoqb.End();
 		
 	};
 
@@ -68,6 +80,7 @@ Springer = function( config )
 
 		gl.viewport( 0, 0, pp.settings.width, pp.settings.height );
 	    gl.disable(gl.DEPTH_TEST);
+	    gl.disable(gl.CULL_FACE);
 	    gl.enable(gl.BLEND);
 
 	    gl.clearColor( 0.25, 0.25, 0.25, 1 );
@@ -77,6 +90,21 @@ Springer = function( config )
 
 	    this.gamelevel.draw( this.camera );
 	    this.player.draw( this.camera );
+
+	    	    // Draw logo
+	    var logomat = mat4.identity();
+	    mat4.scale(logomat, [1+Math.cos(this.logo_wobble)*0.1,1+Math.cos(this.logo_wobble)*0.1,1], logomat);
+
+	    this.logoshader.Bind()
+	    this.logoshader.SetUniform("pmtx", mat4.ortho(0, pp.settings.width, pp.settings.height, 0, -1, 1));
+	    this.logoshader.SetUniform("vmtx", mat4.identity());
+	    this.logoshader.SetUniform("mmtx", logomat);
+	    this.logoshader.SetUniform("tex0", 0);
+	    pp.get_resource("logo").Bind(0);
+	    this.logoqb.BindBuffers( this.logoshader, { position : true, uv0 : true, normal: true});
+		this.logoqb.DrawBuffers( this.logoshader );
+		this.logoqb.UnbindBuffers( this.logoshader, {position : true, uv0 : true, normal: true});
+		this.logoshader.Unbind();
 	};
 
 	screen.update_score = function() 
@@ -85,9 +113,11 @@ Springer = function( config )
 		score_span.innerHTML = this.score;
 	}
 
+
 	screen.tick_score = function() {
 		this.score += this.score_value;
 		this.update_score();
+
 	};
 
 	screen.reset_score = function() 

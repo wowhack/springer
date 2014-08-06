@@ -34,7 +34,8 @@ main.init = function () {
 						"body_0" : { loader: PXF.Texture, args : ["texture/jerry_body_0.png"] },
 						"bg_0" : { loader: PXF.Texture, args : ["texture/bg_0.png"] },
 						"berg_stor" : { loader: PXF.Texture, args : ["texture/berg_stort.png"] },
-						"berg_liten" : { loader: PXF.Texture, args : ["texture/berg_litet.png"] }
+						"berg_liten" : { loader: PXF.Texture, args : ["texture/berg_litet.png"] },
+						"logo" : { loader: PXF.Texture, args : ["texture/logo.png"] }
 					}, function(progress) {
 							if (progress < 1.0)
 								return;
