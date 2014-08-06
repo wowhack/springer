@@ -63,7 +63,9 @@ Player.proto.do_jump = function() {
 		// console.log("jump", this.force);
 
 		this.i_did_jump = true;
+		return true;
 	}
+	return false;
 }
 
 Player.proto.update = function ( level, track_pos, dt ) {

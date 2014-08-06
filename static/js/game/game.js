@@ -56,7 +56,8 @@ Springer = function( config )
 		{
 			if ( gestures.tap )
 			{
-				this.player.do_jump();
+				if (this.player.do_jump())
+					this.particlerunner.create_korvparty(30, this.player.x, this.player.y);
 			}
 
 			this.player.update( this.gamelevel, spotify.position(), dt );
@@ -136,7 +137,6 @@ Springer = function( config )
 
 		this.gamelevel.amazing_grace( 0, 1000 );
 		this.player.reset();
-		this.particlerunner.create_korvparty(50, this.player.x, this.player.y);
 	}
 
 	screen.restart = function () {
