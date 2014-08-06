@@ -19,11 +19,12 @@ void main()
 	vec4 texcolor = texture2D( tex0, v_uv0 );
 	if (backblend > 0.5) {
 		vec4 mixed = mix(vec4(1.0, 0.8, 0.8, 1.0), texcolor, height * 0.95);
+
 		mixed.a = texcolor.a;
+
 		gl_FragColor = mixed;
 	} else {
 		gl_FragColor = texcolor;
 	}
-
 
 }

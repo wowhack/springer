@@ -16,6 +16,14 @@ Springer = function( config )
 		this.state = this.GAME_STATES.STOPPED;
 
 		this.gamelevel = new Gamelevel();
+
+		spotify.playing_change(function (arg) {
+			if (!arg.playing) {
+				game.state = screen.GAME_STATES.PAUSED;
+			} else {
+				game.state = screen.GAME_STATES.PLAYING;
+			}
+		});
 	};
 
 	screen.update = function( instance, dt, vis )
