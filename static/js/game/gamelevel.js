@@ -307,7 +307,7 @@ Gamelevel.prototype.draw = function( camera ) {
 
 	if (typeof(snow_particles) == "undefined") {
 		snow_particles = [];
-		for (var i = 0; i < 100; i += 1) {
+		for (var i = 0; i < 50; i += 1) {
 			snow_particles.push([Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random(), Math.random() * 1, Math.random() * 1 + 1]);
 		}
 	}

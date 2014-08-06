@@ -10,5 +10,6 @@ void main()
 	//ff ce cd
 
 	vec4 texcolor = texture2D( tex0, v_uv0 );
+	texcolor.a = texcolor.a * 0.1;
 	gl_FragColor = texcolor;
 }
