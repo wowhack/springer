@@ -42,13 +42,18 @@ Gamelevel = function( uri ) {
 	// build (or request from game server) track data
 
 	this.shader = new PXF.Shader(pp.ctx,
-		"static/shaders/ground.vs", 
+		"static/shaders/ground.vs",
 		"static/shaders/ground.fs",
 		true);
 	
 	this.mountainshader = new PXF.Shader(pp.ctx,
 		"static/shaders/mountains.vs",
 		"static/shaders/mountains.fs",
+		true);
+
+	this.snowshader = new PXF.Shader(pp.ctx,
+		"static/shaders/snow.vs",
+		"static/shaders/snow.fs",
 		true);
 
 	// TEMP, use a static track
@@ -117,6 +122,12 @@ Gamelevel = function( uri ) {
 	this.backgroundquad.depth = 0;
 	this.backgroundquad.AddTopLeft(-1,-1,2,2);
 	this.backgroundquad.End();
+
+	this.snow = new PXF.QuadBatch(pp.ctx);
+	this.snow.Reset();
+	this.snow.depth = 0;
+	this.snow.AddTopLeft(0,0,1,1);
+	this.snow.End();
 }
 
 Gamelevel.prototype.update = function ( player_position ) { // does not use time delta, our time is fixed at all times...
@@ -284,7 +295,51 @@ Gamelevel.prototype.draw = function( camera ) {
 	}
 
     shader.Unbind()
-    
+
+	// draw snow!
+	var sshader = this.snowshader;
+	sshader.Bind();
+	sshader.SetUniform("tex0", 0 );
+	sshader.SetUniform("mmtx", mat4.identity());
+
+	if (typeof(snow_particles) == "undefined") {
+		snow_particles = [];
+		for (var i = 0; i < 100; i += 1) {
+			snow_particles.push([Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random(), Math.random() * 1, Math.random() * 1 + 1]);
+		}
+	}
+
+	var world = mat4.identity();
+	mat4.scale(world, vec3.create([0.015, 0.015, 1.0]), world);
+	sshader.SetUniform("world", world);
+	for (var i = 0; i < snow_particles.length; i+=1) {
+		var p = snow_particles[i];
+		p[1] -= (scrolling / 200) * p[3];
+
+		var xdiff = Math.sin(p[2]) * 0.5;
+		p[2] += 0.05;
+		p[0] -= (scrolling / 200) * p[4] * xdiff;
+
+		if (p[1] < -1.0) {
+			p[1] = 1.0;
+			p[0] = Math.random() * 2 - 1;
+			p[3] = Math.random() * 2;
+			p[4] = Math.random() * 3;
+		}
+
+		var trans = mat4.identity();
+		mat4.translate(trans, vec3.create([p[0], p[1], 1.0]), trans);
+		sshader.SetUniform("mmtx", trans);
+		var tex = pp.get_resource("snow_lonely");
+		sshader.SetUniform("tex_size", [ tex.width, tex.height ]);
+		tex.Bind(0);
+		var v = this.backgroundquad;
+		v.BindBuffers(sshader, {position: true, uv0: true, normal: false});
+		v.DrawBuffers(sshader);
+		v.UnbindBuffers(sshader, {position: true, uv0: true, normal: false});
+	}
+
+	sshader.Unbind();
 };
 
 Gamelevel.prototype.amazing_grace = function ( start_pos, end_pos )

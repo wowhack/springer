@@ -38,7 +38,9 @@ main.init = function () {
 						"korv_1" : { loader: PXF.Texture, args : ["texture/korv_rosa.png"] },
 						"berg_stor" : { loader: PXF.Texture, args : ["texture/berg_stort.png"] },
 						"berg_liten" : { loader: PXF.Texture, args : ["texture/berg_litet.png"] },
-						"logo" : { loader: PXF.Texture, args : ["texture/logo.png"] }
+						"logo" : { loader: PXF.Texture, args : ["texture/logo.png"] },
+						"snow_small" : { loader: PXF.Texture, args : ["texture/snow_small.png"] },
+						"snow_lonely" : { loader: PXF.Texture, args : ["texture/snow_lonely.png"] }
 					}, function(progress) {
 							if (progress < 1.0)
 								return;
