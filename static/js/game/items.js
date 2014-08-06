@@ -9,6 +9,7 @@ Item.proto.init = function( x, y ) {
 	this.set_position( x,y );
 	this.set_scale([64,64]);
 
+	this.texture = pp.get_resource("melonen");
 	this.shader = pp.ctx.Shaderlib.forward;
 	this.qb     = new PXF.QuadBatch( pp.ctx );
 
@@ -38,6 +39,10 @@ Item.proto.draw = function( camera )
 	this.shader.Bind();
 	this.shader.SetUniform("uMVMatrix", mtx );
 	this.shader.SetUniform("uPMatrix", camera_pmtx);
+
+	this.shader.SetUniform("tex0",0);
+
+	this.texture.Bind( this.shader );
 
 	var bb = { position : true, uv0 : true, normal : false };
 

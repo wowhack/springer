@@ -7,7 +7,8 @@ Springer = function( config )
 	screen.init = function( instance )
 	{
 		var offs = pp.settings.height / 1.8;
-		this.camera = Camera.new( [0, pp.settings.width*1.3, offs, pp.settings.height*1.3 + offs] );
+		var offs2 = pp.settings.width / 1.3;
+		this.camera = Camera.new( [offs2, pp.settings.width*1.3 + offs2, offs, pp.settings.height*1.3 + offs] );
 		//this.camera = Camera.new( [0, pp.settings.width, pp.settings.height, pp.settings.height + pp.settings.height ] );
 		this.player = Player.new( 50,500, 150 ); // start x,y,gravity
 
@@ -55,6 +56,38 @@ Springer = function( config )
 		this.neg_score_div.innerHTML = "-500";
 
 		// this.neg_score_div = neg_score_div;
+	}
+
+	screen.korvfyvarkeri = function() {
+		var splode = [
+			{c: 30, x: -400, y: 300, time: 500},
+			{c: 10, x: 400, y: 310, time: 1500},
+			{c: 5, x: -240, y: 300, time: 1550},
+			{c: 14, x: 140, y: 200, time: 2000},
+			{c: 25, x: -400, y: 170, time: 2200},
+			{c: 10, x: 200, y: 400, time: 2400},
+			{c: 20, x: -400, y: 300, time: 3300},
+			{c: 10, x: 400, y: 310, time: 3500},
+			{c: 5, x: -240, y: 300, time: 3550},
+			{c: 14, x: 140, y: 200, time: 4000},
+			{c: 6, x: -400, y: 170, time: 4200},
+			{c: 10, x: 200, y: 400, time: 5400},
+			{c: 30, x: -400, y: 300, time: 5100},
+			{c: 14, x: 400, y: 310, time: 6200},
+			{c: 5, x: -240, y: 300, time: 6550},
+			{c: 14, x: 140, y: 200, time: 6800},
+			{c: 25, x: -400, y: 170, time: 7200},
+			{c: 10, x: 200, y: 400, time: 7400},
+		]
+
+		for (var i = 0; i < splode.length; i += 1) {
+			var s = splode[i];
+			var player = this.player;
+			var pr = this.particlerunner;
+			setTimeout(function(ss, cnt) {
+				pr.create_korvparty(cnt, player.x + ss.x, player.y + ss.y - 80);
+			}, s.time, s, s.c);
+		}
 	}
 
 	screen.update = function( instance, dt, vis )
@@ -156,6 +189,12 @@ Springer = function( config )
 	    gl.disable(gl.CULL_FACE);
 	    gl.enable(gl.BLEND);
 
+	    //gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ZERO, gl.ZERO);
+		//gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
+
+		gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+		gl.blendEquation(gl.FUNC_ADD);
+
 	    gl.clearColor( 0.25, 0.25, 0.25, 1 );
 	    gl.clear( gl.COLOR_BUFFER_BIT );
 
@@ -238,7 +277,7 @@ Springer = function( config )
 		for ( var i=0; i < this.itemcount; i++ )
 		{
 			var sx = Math.random() * end;
-			var sy = Math.random() * pp.settings.height * 0.8;
+			var sy = Math.random() * Math.max(500,pp.settings.height * 0.7);
 
 			var itm = Item.new( sx, sy );
 

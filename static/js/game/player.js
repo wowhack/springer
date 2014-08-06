@@ -23,6 +23,8 @@ Player.proto.init = function( x,y, gravity ) {
 	this.last_segment = -1
 	this.jumpstate    = {}
 
+	this.feet_wobble = 0;
+
 	this.qb = new PXF.QuadBatch( pp.ctx );
 
 	this.qb.Reset();
@@ -31,13 +33,10 @@ Player.proto.init = function( x,y, gravity ) {
 	this.qb.End();
 
 	this.textures = {
-		body_0 : pp.get_resource("body_0")
+		body_0 : pp.get_resource("jerry")
 	};
 
-	this.shader = new PXF.Shader(pp.ctx,
-		"static/shaders/gubbjaevel.vs", 
-		"static/shaders/gubbjaevel.fs",
-		true);
+	this.jerryshader = new PXF.Shader( pp.ctx, "static/shaders/jerry.vs", "static/shaders/jerry.fs", true);
 
 	// -- this.jumpstate.jump_velocity = 1500 * 3
 
@@ -53,6 +52,19 @@ Player.proto.init = function( x,y, gravity ) {
 		this.jump_ok = true
 	}
 };
+
+function calc_cell_data( cell, cells, rows )
+{
+	
+  var sdt = 1.0 / cells
+  var tdt = 1.0 / rows
+
+  var s = (cell % cells) * sdt
+  var t = (Math.floor( cell / cells )) * tdt
+
+  return { s : s, t : t, sdt : sdt, tdt : tdt }
+
+}
 
 Player.proto.reset = function() {
 	this.x            = this.init_position[0];
@@ -101,7 +113,7 @@ Player.proto.update = function ( level, track_pos, dt ) {
 	// console.log(this.gravity * dt);
 
 	// this.x = this.x + this.velocity[1] * dt + this.forward_speed * dt
-	this.x = track_pos / 6;
+	this.x = track_pos / 2;
 	this.y = this.y + this.velocity[1] * dt 
 
 	this.force = [0,0];
@@ -111,11 +123,70 @@ Player.proto.update = function ( level, track_pos, dt ) {
 	// var p_miny = this.y - this.s[1];
 	// var p_maxy = this.y + this.s[1];
 
-
 	this.qb.Reset();
 	this.qb.depth = 0;
+
+	///// feet
+	var cell_data = calc_cell_data( 2, 4, 4 )
+	var s = cell_data.s
+	var t = cell_data.t
+	var sdt = cell_data.sdt
+	var tdt = cell_data.tdt
+
+	this.qb.SetCoords(
+                          s, t+tdt,
+                      s+sdt, t+tdt,
+                      s+sdt, t,
+                          s, t,
+                    0);
+	// this.qb.AddTopLeft( this.x, this.y-this.s[1]/4, 40, 40);
+	this.feet_wobble += dt*4;
+	this.qb.AddCentered( this.x+this.s[0]/2 - 20, this.y+6, 40, 40, Math.sin(this.feet_wobble));
+	this.qb.AddCentered( this.x+this.s[0]/2 - 10, this.y+6, 40, 40, Math.sin(this.feet_wobble+0.2));
+	this.qb.AddCentered( this.x+this.s[0]/2 - 0, this.y+6,  40, 40, Math.sin(this.feet_wobble+0.2*2));
+	this.qb.AddCentered( this.x+this.s[0]/2 + 10, this.y+6, 40, 40, Math.sin(this.feet_wobble+0.2*3));
+	this.qb.AddCentered( this.x+this.s[0]/2 + 20, this.y+6, 40, 40, Math.sin(this.feet_wobble+0.2*4));
+
+
+	///// head
+	var cell_data = calc_cell_data( 0, 2, 2 )
+	var s = cell_data.s
+	var t = cell_data.t
+	var sdt = cell_data.sdt
+	var tdt = cell_data.tdt
+
+	this.qb.SetCoords(
+                          s, t+tdt,
+                      s+sdt, t+tdt,
+                      s+sdt, t,
+                          s, t,
+                    0);
+	this.qb.AddCentered( this.x+this.s[0]/2, this.y+this.s[1]/2, 100, 100);
+
+
+	var cell_data = calc_cell_data( 2, 2, 2 )
+	var s = cell_data.s
+	var t = cell_data.t
+	var sdt = cell_data.sdt
+	var tdt = cell_data.tdt
+
+	this.qb.SetCoords(
+                          s, t+tdt,
+                      s+sdt, t+tdt,
+                      s+sdt, t,
+                          s, t,
+                    0);
+
+	if (this.jumpstate.jump_ok)
+		this.qb.AddCentered( this.x+this.s[0]/2, this.y+this.s[1]/2, 100, 100);
+	// this.qb.AddTopLeft( this.x, this.y+this.s[1], this.s[0], -this.s[1]);
+
+	// this.qb.AddCentered( this.x, this.y+this.s[1], this.s[0], -this.s[1] )
+	// this.qb:AddCentered( self.x + 14 + math.sin(self.wobble_value * 0.6 + math.pi) * 0.2, self.y-17+wobble_y, 32, 32, math.sin(self.wobble_value * 0.6 + math.pi) * 0.3 + 0.5 )
+
+
+
 	// this.qb.AddCentered( this.x, this.y, this.s[0]*2, this.s[1]*2);
-	this.qb.AddTopLeft( this.x, this.y+this.s[1], this.s[0], -this.s[1]);
 	this.qb.End();
 
 	// console.log(level.query_segments);
@@ -196,10 +267,12 @@ Player.proto.update = function ( level, track_pos, dt ) {
 	this.dt = dt;
 };
 
+
+
+
 Player.proto.draw = function ( camera ) {
 
-	// var shader = pp.ctx.Shaderlib.forward;
-	var shader = this.shader;
+	var shader = this.jerryshader; //pp.ctx.Shaderlib.forward;
 
 	shader.Bind();
 	// shader.SetUniform("color",[0,0,0]);
@@ -211,7 +284,7 @@ Player.proto.draw = function ( camera ) {
 	var camera_vmtx = camera.get_transform()  //--mat4.identity()
 	mat4.inverse(camera_vmtx);
 
-	shader.SetUniform( "uPMatrix", camera_pmtx );
+	shader.SetUniform( "pmtx", camera_pmtx );
 	// shader.SetUniform( "uMVMatrix", camera_vmtx );
 
 	var player_mtx = mat4.identity();
@@ -222,7 +295,8 @@ Player.proto.draw = function ( camera ) {
 
 	mat4.multiply( camera_vmtx, player_mtx, player_mtx );
 
-	shader.SetUniform( "uMVMatrix", player_mtx );
+	shader.SetUniform( "vmtx", mat4.identity() );
+	shader.SetUniform( "mmtx", player_mtx );
 
 	var alpha = 1;
 

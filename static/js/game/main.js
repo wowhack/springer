@@ -33,9 +33,10 @@ main.init = function () {
 					pp.push_screen( pp.preloadscreen( {
 						// "box_scene" : { loader: PXF.Scene, args : ["boxtest/scene.js"] }
 						"ground_0" : { loader: PXF.Texture, args : ["texture/ground_0.png"] },
-						"body_0" : { loader: PXF.Texture, args : ["texture/jerry_body_0.png"] },
+						"jerry" : { loader: PXF.Texture, args : ["texture/jerry_lut.png", {magFilter : 9729, minFilter : 9729}] },
 						"bg_0" : { loader: PXF.Texture, args : ["texture/bg_0.png"] },
 						"korv_0" : { loader: PXF.Texture, args : ["texture/korv_red.png"] },
+						"melonen" : { loader: PXF.Texture, args : ["texture/melonen.png"] },
 						"korv_1" : { loader: PXF.Texture, args : ["texture/korv_rosa.png"] },
 						"berg_stor" : { loader: PXF.Texture, args : ["texture/berg_stort.png"] },
 						"berg_liten" : { loader: PXF.Texture, args : ["texture/berg_litet.png"] },
