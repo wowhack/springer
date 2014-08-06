@@ -274,14 +274,14 @@ Springer = function( config )
 		this.player.reset();
 
 		this.items     = [];
-		this.itemcount = 100;
+		this.itemcount = 150;
 
 		var end = this.gamelevel.segments[this.gamelevel.segments.length-1].e;
 
 		for ( var i=0; i < this.itemcount; i++ )
 		{
 			var sx = Math.random() * end;
-			var sy = Math.random() * Math.max(500,pp.settings.height * 0.7);
+			var sy = Math.random() * Math.max(500,1000);
 
 			var itm = Item.new( sx, sy );
 
