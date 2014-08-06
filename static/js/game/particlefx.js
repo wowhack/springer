@@ -44,11 +44,9 @@ Explosion.prototype.start = function() {
 }
 
 Explosion.prototype.update = function () {
-	console.log(this.alive)
 	if (!this.alive)
 		return;
 	this.running_time = (new Date()).getTime() - this.start_time;
-	console.log(this.running_time)
 	if (this.running_time > this.duration) {
 		this.alive = false;
 		return;
