@@ -32,7 +32,7 @@ main.init = function () {
 					pp.push_screen( pp.preloadscreen( {
 						// "box_scene" : { loader: PXF.Scene, args : ["boxtest/scene.js"] }
 						"ground_0" : { loader: PXF.Texture, args : ["texture/ground_0.png"] },
-						"jerry" : { loader: PXF.Texture, args : ["texture/jerry_lut.png"] },
+						"jerry" : { loader: PXF.Texture, args : ["texture/jerry_lut.png", {magFilter : 9729, minFilter : 9729}] },
 						"bg_0" : { loader: PXF.Texture, args : ["texture/bg_0.png"] },
 						"korv_0" : { loader: PXF.Texture, args : ["texture/korv_red.png"] },
 						"korv_1" : { loader: PXF.Texture, args : ["texture/korv_rosa.png"] },

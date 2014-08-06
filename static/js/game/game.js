@@ -116,6 +116,12 @@ Springer = function( config )
 	    gl.disable(gl.CULL_FACE);
 	    gl.enable(gl.BLEND);
 
+	    //gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ZERO, gl.ZERO);
+		//gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
+
+		gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+		gl.blendEquation(gl.FUNC_ADD);
+
 	    gl.clearColor( 0.25, 0.25, 0.25, 1 );
 	    gl.clear( gl.COLOR_BUFFER_BIT );
 

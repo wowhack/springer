@@ -23,6 +23,8 @@ Player.proto.init = function( x,y, gravity ) {
 	this.last_segment = -1
 	this.jumpstate    = {}
 
+	this.feet_wobble = 0;
+
 	this.qb = new PXF.QuadBatch( pp.ctx );
 
 	this.qb.Reset();
@@ -124,7 +126,29 @@ Player.proto.update = function ( level, track_pos, dt ) {
 	this.qb.Reset();
 	this.qb.depth = 0;
 
-	///// right hand
+	///// feet
+	var cell_data = calc_cell_data( 2, 4, 4 )
+	var s = cell_data.s
+	var t = cell_data.t
+	var sdt = cell_data.sdt
+	var tdt = cell_data.tdt
+
+	this.qb.SetCoords(
+                          s, t+tdt,
+                      s+sdt, t+tdt,
+                      s+sdt, t,
+                          s, t,
+                    0);
+	// this.qb.AddTopLeft( this.x, this.y-this.s[1]/4, 40, 40);
+	this.feet_wobble += dt*4;
+	this.qb.AddCentered( this.x+this.s[0]/2 - 20, this.y+6, 40, 40, Math.sin(this.feet_wobble));
+	this.qb.AddCentered( this.x+this.s[0]/2 - 10, this.y+6, 40, 40, Math.sin(this.feet_wobble+0.2));
+	this.qb.AddCentered( this.x+this.s[0]/2 - 0, this.y+6,  40, 40, Math.sin(this.feet_wobble+0.2*2));
+	this.qb.AddCentered( this.x+this.s[0]/2 + 10, this.y+6, 40, 40, Math.sin(this.feet_wobble+0.2*3));
+	this.qb.AddCentered( this.x+this.s[0]/2 + 20, this.y+6, 40, 40, Math.sin(this.feet_wobble+0.2*4));
+
+
+	///// head
 	var cell_data = calc_cell_data( 0, 2, 2 )
 	var s = cell_data.s
 	var t = cell_data.t
@@ -132,18 +156,37 @@ Player.proto.update = function ( level, track_pos, dt ) {
 	var tdt = cell_data.tdt
 
 	this.qb.SetCoords(
-                          s, t,
-                      s+sdt, t,
-                      s+sdt, t+tdt,
                           s, t+tdt,
+                      s+sdt, t+tdt,
+                      s+sdt, t,
+                          s, t,
                     0);
+	this.qb.AddCentered( this.x+this.s[0]/2, this.y+this.s[1]/2, 100, 100);
+
+
+	var cell_data = calc_cell_data( 2, 2, 2 )
+	var s = cell_data.s
+	var t = cell_data.t
+	var sdt = cell_data.sdt
+	var tdt = cell_data.tdt
+
+	this.qb.SetCoords(
+                          s, t+tdt,
+                      s+sdt, t+tdt,
+                      s+sdt, t,
+                          s, t,
+                    0);
+
+	if (this.jumpstate.jump_ok)
+		this.qb.AddCentered( this.x+this.s[0]/2, this.y+this.s[1]/2, 100, 100);
+	// this.qb.AddTopLeft( this.x, this.y+this.s[1], this.s[0], -this.s[1]);
+
 	// this.qb.AddCentered( this.x, this.y+this.s[1], this.s[0], -this.s[1] )
 	// this.qb:AddCentered( self.x + 14 + math.sin(self.wobble_value * 0.6 + math.pi) * 0.2, self.y-17+wobble_y, 32, 32, math.sin(self.wobble_value * 0.6 + math.pi) * 0.3 + 0.5 )
 
 
 
 	// this.qb.AddCentered( this.x, this.y, this.s[0]*2, this.s[1]*2);
-	this.qb.AddTopLeft( this.x, this.y+this.s[1], this.s[0], -this.s[1]);
 	this.qb.End();
 
 	// console.log(level.query_segments);
