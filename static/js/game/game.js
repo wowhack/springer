@@ -35,6 +35,7 @@ Springer = function( config )
 		this.logoshader = new PXF.Shader( pp.ctx, "static/shaders/logo.vs", "static/shaders/logo.fs", true);
 		this.logo_wobble = 0;
 		this.particlerunner = new ParticleRunner();
+
 	};
 
 	screen.player_dead = function()
@@ -114,6 +115,35 @@ Springer = function( config )
 		this.logoqb.depth = 0;
 		this.logoqb.AddCentered(120, 100, 512 / 3, 405 / 3, Math.sin(this.logo_wobble*2) * 0.1);
 		this.logoqb.End();
+
+		for ( var i in this.items )
+		{
+			var itm = this.items[i];
+
+			if ( itm ) 
+			{
+				itm.update(dt);
+
+				var box1 = [ this.player.x, this.player.y, this.player.x + this.player.s[0], this.player.y + this.player.s[1] ];
+
+				var box2 = [ itm.x - itm.s[0]/2, 
+							itm.y - itm.s[1]/2,
+							itm.x + itm.s[0]/2,
+						    itm.y + itm.s[1]/2 ];
+
+				// console.log(box1,box2);
+
+				if ( box1[2] < box2[0] || box1[0] > box2[2] ||
+					 box1[3] < box2[1] || box1[1] > box2[3] )
+				{
+
+				} else {
+					// console.log("Player taking item " + i );
+
+					this.take_item( i );
+				}
+			};	
+		}
 		
 	};
 
@@ -133,6 +163,15 @@ Springer = function( config )
 
 	    this.gamelevel.draw( this.camera );
 	    this.player.draw( this.camera );
+
+	    for (var i in this.items)
+	    {
+	    	var itm = this.items[i];
+
+	    	if ( itm !== undefined )
+	    		itm.draw( this.camera );
+	    }
+
 	    this.particlerunner.update();
 	    this.particlerunner.draw( this.camera );
 
@@ -170,6 +209,16 @@ Springer = function( config )
 		this.update_score();
 	}
 
+	screen.take_item = function( idx ) 
+	{
+		pp.log("Taking item " + idx);
+
+		this.items[idx] = undefined;
+		this.score += 500;
+
+		this.update_score();
+	}
+
 	screen.start_new = function ( uri ) {
 		
 
@@ -180,6 +229,21 @@ Springer = function( config )
 
 		this.gamelevel.amazing_grace( 0, 1000 );
 		this.player.reset();
+
+		this.items     = [];
+		this.itemcount = 100;
+
+		var end = this.gamelevel.segments[this.gamelevel.segments.length-1].e;
+
+		for ( var i=0; i < this.itemcount; i++ )
+		{
+			var sx = Math.random() * end;
+			var sy = Math.random() * pp.settings.height * 0.8;
+
+			var itm = Item.new( sx, sy );
+
+			this.items.push(itm);
+		}
 	}
 
 	screen.restart = function () {

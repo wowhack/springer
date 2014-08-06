@@ -23,7 +23,8 @@ main.init = function () {
 					"static/js/game/camera.js",
 					"static/js/game/gamelevel.js",
 					"static/js/game/debugquad.js",
-					"static/js/game/particlefx.js"
+					"static/js/game/particlefx.js",
+					"static/js/game/items.js"
 					], 
 				function()
 				{ 
