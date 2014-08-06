@@ -75,7 +75,7 @@ Gamelevel = function( uri ) {
 			var e = s + length;
 
 			// height
-			var h = 40 * section.key;
+			var h = 50 * section.key;
 			h = (1.0 - max_slopiness) * last_key + max_slopiness * h;
 			last_key = h;
 

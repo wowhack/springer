@@ -36,7 +36,10 @@ Player.proto.init = function( x,y, gravity ) {
 
 	// -- this.jumpstate.jump_velocity = 1500 * 3
 
-	this.jumpstate.jump_velocity = 15000 * 15.0
+	// this.playerstate = "dead";
+	this.playerstate = "active";
+
+	this.jumpstate.jump_velocity = 10000 * 2.0
 	this.jumpstate.disable = function() {
 		this.jump_ok = false
 	}
@@ -47,10 +50,10 @@ Player.proto.init = function( x,y, gravity ) {
 };
 
 Player.proto.reset = function() {
-	this.x = this.init_position[0];
-	this.y = this.init_position[1];
-	this.velocity = [0,0];
-	this.force = [0,0];
+	this.x            = this.init_position[0];
+	this.y            = this.init_position[1];
+	this.velocity     = [0,0];
+	this.force        = [0,0];
 	this.last_segment = -1;
 }
 

@@ -55,8 +55,17 @@ Springer = function( config )
 
 	    this.gamelevel.draw( this.camera );
 	    this.player.draw( this.camera );
-
 	};
+
+	screen.tick_score = function() {
+
+		this.score += this.score_value;
+	};
+
+	screen.reset_score = function() 
+	{
+		this.score = 0;
+	}
 
 	screen.start_new = function ( uri ) {
 		
