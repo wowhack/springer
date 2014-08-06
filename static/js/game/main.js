@@ -22,7 +22,8 @@ main.init = function () {
 					"static/js/game/game.js",
 					"static/js/game/camera.js",
 					"static/js/game/gamelevel.js",
-					"static/js/game/debugquad.js"
+					"static/js/game/debugquad.js",
+					"static/js/game/particlefx.js"
 					], 
 				function()
 				{ 
@@ -33,8 +34,13 @@ main.init = function () {
 						"ground_0" : { loader: PXF.Texture, args : ["texture/ground_0.png"] },
 						"body_0" : { loader: PXF.Texture, args : ["texture/jerry_body_0.png"] },
 						"bg_0" : { loader: PXF.Texture, args : ["texture/bg_0.png"] },
+						"korv_0" : { loader: PXF.Texture, args : ["texture/korv_red.png"] },
+						"korv_1" : { loader: PXF.Texture, args : ["texture/korv_rosa.png"] },
 						"berg_stor" : { loader: PXF.Texture, args : ["texture/berg_stort.png"] },
-						"berg_liten" : { loader: PXF.Texture, args : ["texture/berg_litet.png"] }
+						"berg_liten" : { loader: PXF.Texture, args : ["texture/berg_litet.png"] },
+						"logo" : { loader: PXF.Texture, args : ["texture/logo.png"] },
+						"snow_small" : { loader: PXF.Texture, args : ["texture/snow_small.png"] },
+						"snow_lonely" : { loader: PXF.Texture, args : ["texture/snow_lonely.png"] }
 					}, function(progress) {
 							if (progress < 1.0)
 								return;
