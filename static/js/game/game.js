@@ -97,12 +97,16 @@ Springer = function( config )
 
 		var gestures = pp.ctx.GetGestures();
 
+		//console.log(pp.ctx._inputState.mouseDown);
+
 		if (this.state == this.GAME_STATES.PLAYING)
 		{
-			if ( gestures.touch )
+			// if ( gestures.press )
+			if ( pp.ctx._inputState.mouseDown )
 			{
-				if (this.player.do_jump())
-					this.particlerunner.create_korvparty(30, this.player.x, this.player.y);
+				// console.log("touch me");
+				this.player.do_jump();
+					//this.particlerunner.create_korvparty(30, this.player.x, this.player.y);
 			}
 
 			this.player.update( this.gamelevel, spotify.position(), dt );
