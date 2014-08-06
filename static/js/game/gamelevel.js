@@ -55,8 +55,6 @@ Gamelevel = function( uri ) {
 
 	var sections = echonest.current_song.sections;
 	var last_key = 0;
-
-	console.log("generating segments");
 	for (var i in sections) {
 		var section = sections[i];
 		var start = section.start * 500;

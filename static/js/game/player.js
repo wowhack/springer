@@ -36,7 +36,7 @@ Player.proto.init = function( x,y, gravity ) {
 
 	// -- this.jumpstate.jump_velocity = 1500 * 3
 
-	this.jumpstate.jump_velocity = 1500 * 5.0
+	this.jumpstate.jump_velocity = 15000 * 15.0
 	this.jumpstate.disable = function() {
 		this.jump_ok = false
 	}
@@ -55,8 +55,10 @@ Player.proto.reset = function() {
 
 Player.proto.do_jump = function() {
 	if ( this.jumpstate.jump_ok || this.jump_critical_time > 0.0 ) {
-		// console.log("jump", this.jump_critical_time);
 		vec2.add( this.force, [ 0, this.jumpstate.jump_velocity * this.jump_critical_time ], this.force );
+		// console.log("jump", this.force);
+
+		this.i_did_jump = true;
 	}
 }
 
@@ -77,7 +79,13 @@ Player.proto.update = function ( level, track_pos, dt ) {
 	// -- vec2.add( self.velocity, {self.forward_speed * dt, -self.gravity * dt} )
 	vec2.add( this.velocity, [ this.force[0] * dt, this.force[1] * dt - this.gravity * dt ], this.velocity );
 
-	// console.log(this.velocity);
+	if ( this.i_did_jump )
+	{
+		console.log(this.velocity[1]);
+		this.i_did_jump = false;
+	}
+
+	// console.log(this.velocity[1]);
 
 	// console.log(this.gravity * dt);
 

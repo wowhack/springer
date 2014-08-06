@@ -19,9 +19,17 @@ Springer = function( config )
 
 	screen.update = function( instance, dt, vis )
 	{
+		pp.ctx.UpdateInput();
+		pp.ctx._gestureState.Update();
+
+		var gestures = pp.ctx.GetGestures();
 
 		if (this.state == this.GAME_STATES.PLAYING)
 		{
+			if ( gestures.tap )
+			{
+				this.player.do_jump();
+			}
 
 			this.player.update( this.gamelevel, spotify.position(), dt );
 			// console.log("pruppdate");
