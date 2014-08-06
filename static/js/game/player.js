@@ -34,6 +34,8 @@ Player.proto.init = function( x,y, gravity ) {
 		body_0 : pp.get_resource("body_0")
 	};
 
+	this.jerryshader = new PXF.Shader( pp.ctx, "static/shaders/jerry.vs", "static/shaders/jerry.fs", true);
+
 	// -- this.jumpstate.jump_velocity = 1500 * 3
 
 	// this.playerstate = "dead";
@@ -96,7 +98,7 @@ Player.proto.update = function ( level, track_pos, dt ) {
 	// console.log(this.gravity * dt);
 
 	// this.x = this.x + this.velocity[1] * dt + this.forward_speed * dt
-	this.x = track_pos / 6;
+	this.x = track_pos / 2;
 	this.y = this.y + this.velocity[1] * dt 
 
 	this.force = [0,0];
@@ -188,7 +190,7 @@ Player.proto.update = function ( level, track_pos, dt ) {
 
 Player.proto.draw = function ( camera ) {
 
-	var shader = pp.ctx.Shaderlib.forward;
+	var shader = this.jerryshader; //pp.ctx.Shaderlib.forward;
 
 	shader.Bind();
 	// shader.SetUniform("color",[0,0,0]);
@@ -200,7 +202,7 @@ Player.proto.draw = function ( camera ) {
 	var camera_vmtx = camera.get_transform()  //--mat4.identity()
 	mat4.inverse(camera_vmtx);
 
-	shader.SetUniform( "uPMatrix", camera_pmtx );
+	shader.SetUniform( "pmtx", camera_pmtx );
 	// shader.SetUniform( "uMVMatrix", camera_vmtx );
 
 	var player_mtx = mat4.identity();
@@ -214,7 +216,8 @@ Player.proto.draw = function ( camera ) {
 
 	mat4.multiply( camera_vmtx, player_mtx, player_mtx );
 
-	shader.SetUniform( "uMVMatrix", player_mtx );
+	shader.SetUniform( "vmtx", mat4.identity() );
+	shader.SetUniform( "mmtx", player_mtx );
 
 	// shader.SetUniform( "tex0", this.textures.body_0 );
 
