@@ -100,6 +100,9 @@ Player.proto.update = function ( level, track_pos, dt ) {
 	}
 	if ( this.jump_critical_time > 0.0 ) {
 		vec2.add( this.force, [ 0, this.jumpstate.jump_velocity * this.jump_critical_time, 0 ], this.force );
+
+		if (this.jump_critical_time > this.jump_critical_reset - 0.1)
+			game.particlerunner.create_korvparty(30, this.x, this.y);
 	}
 
 	if ( this.wobble && this.jumpstate.jump_ok ) {
