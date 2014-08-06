@@ -228,7 +228,8 @@ Gamelevel.prototype.amazing_grace = function ( start_pos, end_pos )
 		if (v.e > end_pos)
 		{
 			v.s = start_pos;
-			break;
+
+			return v;
 		} else {
 			v.s = 0;
 			v.e = 0;

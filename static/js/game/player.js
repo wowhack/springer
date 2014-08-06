@@ -124,6 +124,17 @@ Player.proto.update = function ( level, track_pos, dt ) {
 
 	var segment_missed = false;
 
+	if ( this.player_dead_timer !== undefined )
+	{
+		this.player_dead_timer += dt;
+
+		if ( this.player_dead_timer > 5 )
+		{
+			game.player_dead();
+			delete this.player_dead_timer;
+		};
+	};
+
 	// -- best algorithm award goes to... backend boys
 	//for ( var k = 0; k < segments.length; k++ ) {
 	for ( var k in segments ) {
@@ -163,6 +174,13 @@ Player.proto.update = function ( level, track_pos, dt ) {
 
 			this.last_segment = k;
 		}
+
+		game.tick_score();
+	};
+
+	if ( segment_missed && this.player_dead_timer === undefined )
+	{
+		this.player_dead_timer = 0;
 	}
 };
 

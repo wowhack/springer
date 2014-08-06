@@ -16,7 +16,21 @@ Springer = function( config )
 		this.state = this.GAME_STATES.STOPPED;
 
 		this.gamelevel = new Gamelevel();
+
+		this.score_value = 1;
+
+		this.reset_score();
 	};
+
+	screen.player_dead = function()
+	{
+		console.log("Oh he dead..");
+
+		var amazing_race = this.gamelevel.amazing_grace( this.player.x, this.player.x + 400);
+
+		
+		this.player.y = amazing_race.h+200;
+	}
 
 	screen.update = function( instance, dt, vis )
 	{
@@ -57,14 +71,21 @@ Springer = function( config )
 	    this.player.draw( this.camera );
 	};
 
-	screen.tick_score = function() {
+	screen.update_score = function() 
+	{
+		var score_span       = document.getElementById("score_span");
+		score_span.innerHTML = this.score;
+	}
 
+	screen.tick_score = function() {
 		this.score += this.score_value;
+		this.update_score();
 	};
 
 	screen.reset_score = function() 
 	{
 		this.score = 0;
+		this.update_score();
 	}
 
 	screen.start_new = function ( uri ) {
