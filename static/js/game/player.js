@@ -15,7 +15,7 @@ Player.proto.init = function( x,y, gravity ) {
 	this.wobble_value  = 0.0;
 	this.wobble_amp    = 2.0;
 
-	this.jump_critical_reset = 0.3;
+	this.jump_critical_reset = 0.7;
 	this.jump_critical_time = 0.0;
 
 	this.velocity     = [0,0];
@@ -43,7 +43,7 @@ Player.proto.init = function( x,y, gravity ) {
 	// this.playerstate = "dead";
 	this.playerstate = "active";
 
-	this.jumpstate.jump_velocity = 10000 * 2.0
+	this.jumpstate.jump_velocity = 2500 * 0.5
 	this.jumpstate.disable = function() {
 		this.jump_ok = false
 	}
@@ -75,10 +75,13 @@ Player.proto.reset = function() {
 }
 
 Player.proto.do_jump = function() {
-	if ( this.jumpstate.jump_ok || this.jump_critical_time > 0.0 ) {
-		vec2.add( this.force, [ 0, this.jumpstate.jump_velocity * this.jump_critical_time ], this.force );
+	if ( this.jumpstate.jump_ok) {// || this.jump_critical_time > 0.0 ) {
+		// vec2.add( this.force, [ 0, this.jumpstate.jump_velocity * this.jump_critical_time*this.jump_critical_time*this.jump_critical_time*this.jump_critical_time*this.jump_critical_time, 0 ], this.force );
+		// vec2.add( this.force, [ 0, this.jumpstate.jump_velocity * this.jump_critical_time*this.jump_critical_time*this.jump_critical_time ], this.force );
 		// console.log("jump", this.force);
+		game.particlerunner.create_korvparty(30, this.x, this.y);
 
+		this.jump_critical_time = this.jump_critical_reset;
 		this.i_did_jump = true;
 		return true;
 	}
@@ -91,12 +94,21 @@ Player.proto.update = function ( level, track_pos, dt ) {
 
 	dt = 1 / 30.0; // is this real wife
 
+	if (!pp.ctx._inputState.mouseDown)
+	{
+		this.jump_critical_time = 0;
+	}
+	if ( this.jump_critical_time > 0.0 ) {
+		vec2.add( this.force, [ 0, this.jumpstate.jump_velocity * this.jump_critical_time, 0 ], this.force );
+	}
+
 	if ( this.wobble && this.jumpstate.jump_ok ) {
 		 this.wobble_value = this.wobble_value + dt * this.wobble_speed;
 	}
 
 	if (this.jump_critical_time > 0) {
 		this.jump_critical_time = this.jump_critical_time - dt
+		// console.log(this.jump_critical_time);
 	}
 
 	// -- vec2.add( self.velocity, {self.forward_speed * dt, -self.gravity * dt} )
