@@ -97,7 +97,7 @@ ParticleRunner.prototype.update = function() {
 		for(var o = 0; o < particle.ps.length; o += 1) {
 			var p = particle.ps[o];
 			this.batches[p.spriteid].AddCentered(p.x, p.y,
-							   256/2, 256/2,
+							   256/1.5, 256/1.5,
 			                   p.r)
 		}
 	}

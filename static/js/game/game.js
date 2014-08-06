@@ -45,6 +45,38 @@ Springer = function( config )
 		this.player.y = amazing_race.h+200;
 	}
 
+	screen.korvfyvarkeri = function() {
+		var splode = [
+			{c: 30, x: -400, y: 300, time: 500},
+			{c: 10, x: 400, y: 310, time: 1500},
+			{c: 5, x: -240, y: 300, time: 1550},
+			{c: 14, x: 140, y: 200, time: 2000},
+			{c: 25, x: -400, y: 170, time: 2200},
+			{c: 10, x: 200, y: 400, time: 2400},
+			{c: 20, x: -400, y: 300, time: 3300},
+			{c: 10, x: 400, y: 310, time: 3500},
+			{c: 5, x: -240, y: 300, time: 3550},
+			{c: 14, x: 140, y: 200, time: 4000},
+			{c: 6, x: -400, y: 170, time: 4200},
+			{c: 10, x: 200, y: 400, time: 5400},
+			{c: 30, x: -400, y: 300, time: 5100},
+			{c: 14, x: 400, y: 310, time: 6200},
+			{c: 5, x: -240, y: 300, time: 6550},
+			{c: 14, x: 140, y: 200, time: 6800},
+			{c: 25, x: -400, y: 170, time: 7200},
+			{c: 10, x: 200, y: 400, time: 7400},
+		]
+
+		for (var i = 0; i < splode.length; i += 1) {
+			var s = splode[i];
+			var player = this.player;
+			var pr = this.particlerunner;
+			setTimeout(function(ss, cnt) {
+				pr.create_korvparty(cnt, player.x + ss.x, player.y + ss.y - 80);
+			}, s.time, s, s.c);
+		}
+	}
+
 	screen.update = function( instance, dt, vis )
 	{
 		pp.ctx.UpdateInput();
