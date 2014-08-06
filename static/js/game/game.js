@@ -58,6 +58,7 @@ Springer = function( config )
 		this.gamelevel = new Gamelevel( uri );
 		hide_modal();
 
+		this.gamelevel.amazing_grace( 0, 1000 );
 		this.player.reset();
 	}
 

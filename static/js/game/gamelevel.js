@@ -221,6 +221,25 @@ Gamelevel.prototype.draw = function( camera ) {
     
 };
 
+Gamelevel.prototype.amazing_grace = function ( start_pos, end_pos )
+{
+
+	for (var i = 0; i < this.segments.length; i++) {
+		
+		var v = this.segments[i];
+		if (v.e > end_pos)
+		{
+			v.s = start_pos;
+			break;
+		} else {
+			v.s = 0;
+			v.e = 0;
+		}
+
+	};
+
+};
+
 Gamelevel.prototype.query_segments = function ( view ) {
 	
 	if (this.segments.length <= 0)
