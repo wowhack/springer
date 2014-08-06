@@ -32,7 +32,9 @@ main.init = function () {
 						// "box_scene" : { loader: PXF.Scene, args : ["boxtest/scene.js"] }
 						"ground_0" : { loader: PXF.Texture, args : ["texture/ground_0.png"] },
 						"body_0" : { loader: PXF.Texture, args : ["texture/jerry_body_0.png"] },
-						"bg_0" : { loader: PXF.Texture, args : ["texture/bg_0.png"] }
+						"bg_0" : { loader: PXF.Texture, args : ["texture/bg_0.png"] },
+						"berg_stor" : { loader: PXF.Texture, args : ["texture/berg_stort.png"] },
+						"berg_liten" : { loader: PXF.Texture, args : ["texture/berg_litet.png"] }
 					}, function(progress) {
 							if (progress < 1.0)
 								return;

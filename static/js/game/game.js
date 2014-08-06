@@ -20,6 +20,14 @@ Springer = function( config )
 		this.score_value = 1;
 
 		this.reset_score();
+
+		spotify.playing_change(function (arg) {
+			if (!arg.playing) {
+				game.state = screen.GAME_STATES.PAUSED;
+			} else {
+				game.state = screen.GAME_STATES.PLAYING;
+			}
+		});
 	};
 
 	screen.player_dead = function()

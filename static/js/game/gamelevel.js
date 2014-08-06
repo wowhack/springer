@@ -45,6 +45,11 @@ Gamelevel = function( uri ) {
 		"static/shaders/ground.vs", 
 		"static/shaders/ground.fs",
 		true);
+	
+	this.mountainshader = new PXF.Shader(pp.ctx,
+		"static/shaders/mountains.vs",
+		"static/shaders/mountains.fs",
+		true);
 
 	// TEMP, use a static track
 	//this.track_segments = [
@@ -106,6 +111,12 @@ Gamelevel = function( uri ) {
 	this.tempquad.depth = 0;
 	this.tempquad.AddTopLeft(0,0,1,1);
 	this.tempquad.End();
+
+	this.backgroundquad = new PXF.QuadBatch(pp.ctx);
+	this.backgroundquad.Reset();
+	this.backgroundquad.depth = 0;
+	this.backgroundquad.AddTopLeft(-1,-1,2,2);
+	this.backgroundquad.End();
 }
 
 Gamelevel.prototype.update = function ( player_position ) { // does not use time delta, our time is fixed at all times...
@@ -171,6 +182,63 @@ Gamelevel.prototype.draw = function( camera ) {
 		v.End()
 	}
 
+	// draw mountains
+	var mshader = this.mountainshader;
+	mshader.Bind();
+	mshader.SetUniform("tex0", 0 );
+
+	mshader.SetUniform("mmtx", mat4.identity());
+
+	if (typeof(scrolling) == "undefined") {
+		scrolling = 100
+		bigs = [0, 2, 3, 5, 5.5, 8, 3, 2];
+		smalls = [0, 1, 3, 4, 7, 9, 3, 9];
+	}
+	if (game.state == game.GAME_STATES.PLAYING) {
+		scrolling = 1
+	} else {
+		scrolling = 0
+	}
+
+	mshader.SetUniform("backblend", 1.0);
+	for (var i = 0; i < bigs.length; i+=1) {
+		bigs[i] -= scrolling/300;
+		if (bigs[i] < -2.0) {
+			bigs[i] = 2 + Math.random() * bigs.length;
+		}
+		var big_mountain = mat4.identity();
+		mat4.translate(big_mountain, vec3.create([bigs[i], -0.2, 1.0]), big_mountain);
+		mshader.SetUniform("mmtx", big_mountain);
+		var tex = pp.get_resource("berg_stor");
+		mshader.SetUniform("tex_size", [ tex.width, tex.height ]);
+		tex.Bind(0);
+		var v = this.backgroundquad;
+		v.BindBuffers(mshader, {position: true, uv0: true, normal: false});
+		v.DrawBuffers(mshader);
+		v.UnbindBuffers(mshader, {position: true, uv0: true, normal: false});
+	}
+
+	mshader.SetUniform("backblend", 0.0);
+	for (var i = 0; i < smalls.length; i+=1) {
+		smalls[i] -= scrolling/50;
+		if (smalls[i] < -4.0) {
+			smalls[i] = 4 + Math.random() * smalls.length;
+		}
+		var little_mountain = mat4.identity();
+		mat4.scale(little_mountain, vec3.create([0.5, 0.5, 1.0]), little_mountain);
+		mat4.translate(little_mountain, vec3.create([smalls[i], -1.3, 1.0]), little_mountain);
+		mshader.SetUniform("mmtx", little_mountain);
+		var tex = pp.get_resource("berg_liten");
+		mshader.SetUniform("tex_size", [ tex.width, tex.height ]);
+		tex.Bind(0);
+		var v = this.backgroundquad;
+		v.BindBuffers(mshader, {position: true, uv0: true, normal: false});
+		v.DrawBuffers(mshader);
+		v.UnbindBuffers(mshader, {position: true, uv0: true, normal: false});
+	}
+
+	mshader.Unbind();
+
 	var shader = this.shader;
 
  	shader.Bind();
@@ -188,7 +256,7 @@ Gamelevel.prototype.draw = function( camera ) {
 	// shader.SetUniform("tex_right", 2 );
 
     shader.SetUniform("pixels_to_coords", 1.0 );
-
+	
 // 	-- draw all qbs
 	for (var i in this.segment_qbs) {
 		var v = this.segment_qbs[i];
