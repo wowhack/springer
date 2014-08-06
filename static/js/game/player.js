@@ -5,7 +5,7 @@ Player.proto.init = function( x,y, gravity ) {
 
 	this.init_position = [x,y];
 	this.set_position(x,y);
-	this.set_scale([179,203]);
+	this.set_scale([179 / 2.0,203/2.0]);
 	// this.debug_quad    = Debugquad.new( x,y, [32,32] );
 	this.gravity       = gravity || 1;
 	this.forward_speed = 80 * 2;
@@ -51,6 +51,7 @@ Player.proto.reset = function() {
 	this.y = this.init_position[1];
 	this.velocity = [0,0];
 	this.force = [0,0];
+	this.last_segment = -1;
 }
 
 Player.proto.do_jump = function() {
@@ -90,31 +91,38 @@ Player.proto.update = function ( level, track_pos, dt ) {
 	// console.log(this.gravity * dt);
 
 	// this.x = this.x + this.velocity[1] * dt + this.forward_speed * dt
-	this.x = track_pos / 20;
+	this.x = track_pos / 6;
 	this.y = this.y + this.velocity[1] * dt 
 
 	this.force = [0,0];
 
-	var p_minx = this.x - this.s[0];
-	var p_maxx = this.x + this.s[0];
-	var p_miny = this.y - this.s[1];
-	var p_maxy = this.y + this.s[1];
+	// var p_minx = this.x - this.s[0];
+	// var p_maxx = this.x + this.s[0];
+	// var p_miny = this.y - this.s[1];
+	// var p_maxy = this.y + this.s[1];
+
+
+	this.qb.Reset();
+	this.qb.depth = 0;
+	// this.qb.AddCentered( this.x, this.y, this.s[0]*2, this.s[1]*2);
+	this.qb.AddTopLeft( this.x, this.y+this.s[1], this.s[0], -this.s[1]);
+	this.qb.End();
 
 	// console.log(level.query_segments);
 
 	// console.log(p_minx,p_maxx);
 
-	// var segments       = level.track_segments; //level.query_segments( [ p_minx, p_maxx ] );
-	var segments       = level.query_segments( { s : p_minx, e : p_maxx } );
+	//var segments       = level.track_segments; //level.query_segments( [ p_minx, p_maxx ] );
+	var segments       = level.query_segments( { s : this.x, e : this.x+this.s[0] } );
 
-	// console.log(segments);
+	// console.log(segments.length);
 
 	this.jumpstate.disable();
 
 	var segment_missed = false;
 
 	// -- best algorithm award goes to... backend boys
-	// for ( var k = 0; k < segments.length; k++ ) {
+	//for ( var k = 0; k < segments.length; k++ ) {
 	for ( var k in segments ) {
 
 		k = Number(k);
@@ -122,7 +130,7 @@ Player.proto.update = function ( level, track_pos, dt ) {
 		var v = segments[k];
 
 		if ( k > this.last_segment) {
-			if ( p_miny < segments[k].h ) {
+			if ( this.y < segments[k].h + 90 ) {
 
 				// console.log("missed " + k);
 
@@ -133,18 +141,18 @@ Player.proto.update = function ( level, track_pos, dt ) {
 
 	if ( !segment_missed ) {
 		// for k,v in pairs(segments) do 
-		// for ( var k = 0; k < segments.length; k++ ) {
+		//for ( var k = 0; k < segments.length; k++ ) {
 		for ( var k in segments ) {
 
 			k = Number(k);
 
 			var v = segments[k];
 
-			if ( p_miny <= v.h ) {
+			if ( this.y <= v.h + 90 ) {
 
 				// console.log("missed?");
 
-				this.y = v.h + this.s[1] / 2;
+				this.y = v.h + 90;// + this.s[1]*2.0;
 				this.jumpstate.enable();
 				this.jump_critical_time = this.jump_critical_reset;
 				this.velocity[1] = 0;
@@ -178,10 +186,10 @@ Player.proto.draw = function ( camera ) {
 		mat4.translate( player_mtx, [ 0, Math.sin( this.wobble_value) * this.wobble_amp, 0 ] ); 
 	};
 
-	mat4.translate( player_mtx, [ this.x, this.y + 160, 0 ] ); 
-	mat4.scale( player_mtx, [ this.s[0], this.s[1], 1 ] ); 
+	//mat4.translate( player_mtx, [ this.x, this.y + 160, 0 ] ); 
+	//mat4.scale( player_mtx, [ this.s[0], this.s[1], 1 ] ); 
 
-	mat4.multiply( camera_vmtx,player_mtx,player_mtx);
+	mat4.multiply( camera_vmtx, player_mtx, player_mtx );
 
 	shader.SetUniform( "uMVMatrix", player_mtx );
 

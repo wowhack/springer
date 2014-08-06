@@ -24,6 +24,12 @@ function segments_overlap( s1, s2 )
 	if (s == 0) {
 		return 0
 	}
+
+	// // dont ask dont tell
+	// s = point_in_interval(s2.e, s1.s, s1.e)
+	// if (s == 0) {
+	// 	return 0
+	// }
 	
 	// check if "view" start is in segment
 	// (special case where segment spawns larger than width of view)
@@ -51,7 +57,7 @@ Gamelevel = function( uri ) {
 	this.segments = [];
 	console.log(echonest.current_song);
 
-	var max_slopiness = 0.1;
+	var max_slopiness = 0.2;
 
 	var sections = echonest.current_song.sections;
 	var last_key = 0;
@@ -64,12 +70,12 @@ Gamelevel = function( uri ) {
 
 		for (var cur_start = start; cur_start < end; ) {
 			// start, end
-			var length = 60 * loudness;
+			var length = 20 * loudness;
 			var s = cur_start;
 			var e = s + length;
 
 			// height
-			var h = 10 * section.key;
+			var h = 40 * section.key;
 			h = (1.0 - max_slopiness) * last_key + max_slopiness * h;
 			last_key = h;
 
@@ -81,9 +87,11 @@ Gamelevel = function( uri ) {
 
 			this.segments.push({s: s, e: e, h: h, t: t});
 
-			cur_start += length + 40;
+			cur_start += length + 180;
 		}
 	}
+
+	// console.log("this.segments:", this.segments.length);
 
 	this.segment_qbs = [];
 	for (var i = 0; i < 4; i += 1) {
@@ -150,7 +158,7 @@ Gamelevel.prototype.draw = function( camera ) {
 		var v = visible_segments[i];
 		this.segment_qbs[v.t].SetNormal( v.e-v.s, v.h, 0 );
 		// this.segment_qbs[v.t].AddTopLeft( v.s, v.h, v.e-v.s, -v.h );
-		this.segment_qbs[v.t].AddTopLeft( v.s, v.h, v.e-v.s, 160 );
+		this.segment_qbs[v.t].AddTopLeft( v.s, v.h, v.e-v.s, 90 );
 		// this.segment_qbs[v.t].depth = 0;
 		// this.segment_qbs[v.t].AddTopLeft( 0, 0, 1000, 1000 );
 	}
@@ -216,11 +224,29 @@ Gamelevel.prototype.query_segments = function ( view ) {
 	if (this.segments.length <= 0)
 	{
 		return [];
-	}	
+	}
+
+	var found_segments = {};
+
+	for (var i = 0; i < this.segments.length; i++) {
+		var v = this.segments[i];
+		var s = segments_overlap( v, view );
+
+		if (s == 0) {
+			//table.insert(possibility_stack, i)
+			found_segments[i] = v;
+		}
+
+		if (s > 0)
+			break;
+	};
+
+
+	return found_segments;
 
 	// todo build binary search tree instead of binary list search below
 
-	var found_segments = {};
+	var found_segments = [];
 	var possibility_stack = [];
 	var checked = {};
 
@@ -239,16 +265,16 @@ Gamelevel.prototype.query_segments = function ( view ) {
 	while (true)
 	{
 
-		// console.log(i);
+		console.log(i);
 
 		bound_size = Math.max( Math.ceil(bound_size / 2), 1);
 
 		var v = this.segments[i];
 		var s = segments_overlap( v, view );
 
-		// console.log("hej",s);
+		console.log("hej",s);
 
-		// console.log("segment",v,view);
+		console.log("segment",v,view);
 
 		if (s == 0) {
 			//table.insert(possibility_stack, i)
@@ -290,7 +316,8 @@ Gamelevel.prototype.query_segments = function ( view ) {
 				var v = this.segments[i];
 				var s = segments_overlap( v, view );
 				if (s == 0) {
-					found_segments[i] = v;
+					//found_segments[i] = v;
+					found_segments.push(v);
 				}
 
 				// add siblings
@@ -304,6 +331,9 @@ Gamelevel.prototype.query_segments = function ( view ) {
 
 	}
 
+	console.log("found_segments:", found_segments.length);
+
+	ducksucker();
 	// console.log(found_segments);
 
 	return found_segments;

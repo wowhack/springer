@@ -6,9 +6,10 @@ Springer = function( config )
 
 	screen.init = function( instance )
 	{
-		this.camera = Camera.new( [0, pp.settings.width*4, 0, pp.settings.height *4] );
+		var offs = pp.settings.height / 1.8;
+		this.camera = Camera.new( [0, pp.settings.width*1.3, offs, pp.settings.height*1.3 + offs] );
 		//this.camera = Camera.new( [0, pp.settings.width, pp.settings.height, pp.settings.height + pp.settings.height ] );
-		this.player = Player.new( 0,400,100 ); // start x,y,gravity
+		this.player = Player.new( 50,500,100 ); // start x,y,gravity
 
 		this.camera.set_look_at( this.player );
 
